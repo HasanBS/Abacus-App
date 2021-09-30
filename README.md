@@ -10,9 +10,9 @@
 **Abacus** is a fast and easy to use, note-taking application. With Abacus you can create different types of notes with different functionality. You can save your moments in a simple way.
 
 <p align="center">
-<img src = "https://github.com/HasanBS/Abacus-App/blob/main/Assets/CounterScreen.png" width ="300" />
-  <img src = "https://github.com/HasanBS/Abacus-App/blob/main/Assets/CountdownScreen.png" width ="300" />
-  <img src = "https://github.com/HasanBS/Abacus-App/blob/main/Assets/Mange.png" width ="300" />
+<img src = "https://github.com/HasanBS/Abacus-App/blob/main/Assets/CounterScreen.png" width ="275" />
+  <img src = "https://github.com/HasanBS/Abacus-App/blob/main/Assets/CountdownScreen.png" width ="275" />
+  <img src = "https://github.com/HasanBS/Abacus-App/blob/main/Assets/Mange.png" width ="275" />
 </p>
 
 
