@@ -1,0 +1,92 @@
+{
+  "home": {
+    "closeSnackBarMessenge": "Double Press To Close The App"
+  },
+
+  "onBoard": {
+    "page1": {
+      "title": "Add Your Contents",
+      "description": "with the + button"
+    },
+    "page2": {
+      "title": "Delete Your Contents",
+      "description": "with a long press"
+    },
+    "page3": {
+      "title": "Ready To Go!",
+      "description": ""
+    }
+  },
+  
+  "counter": {
+    "homeScreenTitle": "Counter",
+    "formTitle": "Title",
+    "formDescription": "Description",
+    "pupup": {
+      "startingAmount": "Starting Amount",
+      "formRatio": "Ratio",
+      "add": "Add"
+    },
+    "page": {
+      "appBarSave": "Save",
+      "appBarEdit": "Edit",
+      "ratio": "Counter Ratio"
+    },
+    "delete_alertDialog": {
+      "questionText": "Do You Want To Delete This Counter ?",
+      "confirmBtnText": "Yes",
+      "cancelBtnText": "No"
+    },
+    "save_alertDialog": {
+      "questionText": "Do You Want Exit Without Saving ?",
+      "confirmBtnText": "Save & Exit",
+      "cancelBtnText": "Exit"
+    }
+  },
+  "countdown": {
+    "homeScreenTitle": "Countdown",
+    "formTitle": "Title",
+    "formDescription": "Description",
+    "pickerDateTitle": "Set The Goal Date",
+    "pickerTimeTitle": "Set The Goal Time",
+    "popup": {
+      "setDate": "Set Date",
+      "date": "{}/{}/{}",
+      "setTime": "Set Time",
+      "time": "{}:{}",
+      "add": "Add"
+    },
+    "buttonField": {
+      "since": "Since",
+      "until": "Until",
+      "year": "Y:{} ",
+      "month": "M:{} ",
+      "day": "D:{} ",
+      "hour": "H:{} ",
+      "minute": "M:{} ",
+      "second": "S:{}"
+    },
+    "page": {
+      "appBarSave": "Save",
+      "appBarEdit": "Edit",
+      "since": "Since",
+      "until": "Until",
+      "year": "{}y ",
+      "month": "{}m ",
+      "day": "{}d",
+      "hour": "{}h ",
+      "minute": "{}m ",
+      "second": "{}s"
+    },
+    "delete_alertDialog": {
+      "questionText": "Do You Want To Delete This Countdown ?",
+      "confirmBtnText": "Yes",
+      "cancelBtnText": "No"
+    },
+    "save_alertDialog": {
+      "questionText": "Do You Want Exit Without Saving ?",
+      "confirmBtnText": "Save & Exit",
+      "cancelBtnText": "Exit"
+    }
+  }
+}

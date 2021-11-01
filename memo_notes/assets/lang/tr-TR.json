@@ -1,0 +1,102 @@
+{
+    "home": {
+      "closeSnackBarMessenge": "Uygulamayı kapatmak için çift basın."
+    },
+
+    "onBoard": {
+
+      "page1": {
+        "title": "İçeriğinizi ekleyin",
+        "description": "+ butonuyla"
+      },
+      "page2": {
+        "title": "İçeriğinizi silin",
+        "description": "Uzun bir basışla"
+      },
+      "page3": {
+        "title": "Tebrikler!",
+        "description": ""
+      }
+    },
+  
+    "counter": {
+      "homeScreenTitle": "Sayaç",
+      "formTitle": "Başlık",
+      "formDescription": "Açıklama",
+
+      "pupup": {
+        "startingAmount": "Başlangıç miktarı",
+        "formRatio": "Oran",
+        "add": "Ekle"
+      },
+      "page":{
+        "appBarSave":"Kaydet",
+        "appBarEdit":"Düzenle",
+        "ratio":"Sayaç Oranı"
+      },
+  
+      "delete_alertDialog":{
+        "questionText":"Bu Sayaçı Silmek İster Misiniz ?",
+        "confirmBtnText":"Evet",
+        "cancelBtnText":"Hayır"
+      },
+
+      "save_alertDialog":{
+        "questionText":"Kaydetmeden Çıkmak İstiyor Musunuz ?",
+        "confirmBtnText":"Kaydet & Çık",
+        "cancelBtnText":"Çıkış"
+      }
+    },
+  
+    "countdown": {
+      "homeScreenTitle": "Geri Sayım",
+      "formTitle": "Başlık",
+      "formDescription": "Açıklama",
+      "pickerDateTitle": "Hedef Tarihini Ayarla",
+      "pickerTimeTitle": "Hedef Zamanını Ayarla",
+      "popup": {
+        "setDate": "Tarih Seç",
+        "date": "{}/{}/{}",
+        "setTime": "Saati Seç",
+        "time": "{}:{}",
+        "add": "Ekle"
+      },
+
+      "buttonField": {
+        "since": "Geçen",
+        "until": "Kalan",
+        "year": "Y:{} ",
+        "month": "A:{} ",
+        "day": "G:{} ",
+        "hour": "S:{} ",
+        "minute": "D:{} ",
+        "second": "S:{}"
+      },
+
+      "page":{
+        "appBarSave":"Kaydet",
+        "appBarEdit":"Düzenle",
+        "since":"Geçen",
+        "until":"Kalan",
+        "year": "{}y ",
+        "month": "{}a ",
+        "day": "{}g",
+        "hour": "{}s ",
+        "minute": "{}d ",
+        "second": "{}s"
+      },
+
+      "delete_alertDialog": {
+        "questionText": "Bu Geri Sayımı Silmek İster Misiniz ?",
+        "confirmBtnText": "Evet",
+        "cancelBtnText": "Hayır"
+      },
+
+      "save_alertDialog":{
+        "questionText":"Kaydetmeden Çıkmak İstiyor Musunuz ?",
+        "confirmBtnText":"Kaydet & Çık",
+        "cancelBtnText":"Çıkış"
+      }
+    }
+  }
+  
