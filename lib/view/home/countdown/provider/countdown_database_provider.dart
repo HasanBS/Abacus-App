@@ -18,10 +18,8 @@ class CountdownDatabaseProvider implements DatabaseManager<CountdownModel> {
 
   CountdownDatabaseProvider._init();
 
-  static const _dbName = "database2.db"; //? samedb name or diffrent for every fuction ??
-
+  static const _dbName = "database2.db";
   static const _countdownTableName = "countdown";
-
   static const _columnId = "id";
   static const _columnTitle = "title";
   static const _columnDescription = "description";
@@ -42,15 +40,9 @@ class CountdownDatabaseProvider implements DatabaseManager<CountdownModel> {
     final path = join(await getDatabasesPath(), _dbName);
     //await deleteDatabase(path);
 
-    database = await openDatabase(path, version: 1, onConfigure: _onConfigure,
-        onCreate: (Database db, int version) async {
+    database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(countdownTable);
     });
-  }
-
-  Future _onConfigure(Database db) async {
-    //? if different db is need than delete
-    await db.execute('PRAGMA foreign_keys = ON');
   }
 
   @override
@@ -71,32 +63,23 @@ class CountdownDatabaseProvider implements DatabaseManager<CountdownModel> {
   }
 
   @override
-  Future<bool> insertItem(CountdownModel model) async {
-    final countdownMaps = await database.insert(_countdownTableName, model.toJson());
-
-    // ignore: unnecessary_null_comparison
-    return countdownMaps != null;
+  Future<void> insertItem(CountdownModel model) async {
+    await database.insert(_countdownTableName, model.toJson());
   }
 
   @override
-  Future<bool> removeItem(int id) async {
-    final countdownMaps =
-        await database.delete(_countdownTableName, where: '$_columnId = ?', whereArgs: [id]);
-    // ignore: unnecessary_null_comparison
-    return countdownMaps != null;
+  Future<void> removeItem(int id) async {
+    await database.delete(_countdownTableName, where: '$_columnId = ?', whereArgs: [id]);
   }
 
   @override
-  Future<bool> updateItem(int id, CountdownModel model) async {
-    final countdownMaps = await database
+  Future<void> updateItem(int id, CountdownModel model) async {
+    await database
         .update(_countdownTableName, model.toJson(), where: '$_columnId = ?', whereArgs: [id]);
-    // ignore: unnecessary_null_comparison
-    return countdownMaps != null;
   }
 
   @override
   Future<void> close() async {
-    // if (database == null) database;
     await database.close();
   }
 }

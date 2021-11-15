@@ -19,7 +19,6 @@ class TodoDatabaseProvider implements DatabaseManager<TodoModel> {
   TodoDatabaseProvider._init();
 
   static const _dbName = "database3.db";
-
   static const _todoTableName = "todo";
   static const _columnId = "id";
   static const _columnTitle = "title";
@@ -44,22 +43,14 @@ class TodoDatabaseProvider implements DatabaseManager<TodoModel> {
     final path = join(await getDatabasesPath(), _dbName);
     //await deleteDatabase(path);
 
-    database = await openDatabase(path, version: 1, onConfigure: _onConfigure,
-        onCreate: (Database db, int version) async {
+    database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(_todoTable);
     });
   }
 
-  //?test it
-  Future _onConfigure(Database db) async {
-    await db.execute('PRAGMA foreign_keys = ON');
-  }
-
   @override
-  Future<bool> insertItem(TodoModel model) async {
-    final todoModelMaps = await database.insert(_todoTableName, model.toJson());
-
-    return todoModelMaps != null;
+  Future<void> insertItem(TodoModel model) async {
+    await database.insert(_todoTableName, model.toJson());
   }
 
   @override
@@ -80,18 +71,13 @@ class TodoDatabaseProvider implements DatabaseManager<TodoModel> {
   }
 
   @override
-  Future<bool> updateItem(int id, TodoModel model) async {
-    final todoMap = await database
-        .update(_todoTableName, model.toJson(), where: '$_columnId = ?', whereArgs: [id]);
-    // ignore: unnecessary_null_comparison
-    return todoMap != null;
+  Future<void> updateItem(int id, TodoModel model) async {
+    await database.update(_todoTableName, model.toJson(), where: '$_columnId = ?', whereArgs: [id]);
   }
 
   @override
-  Future<bool> removeItem(int id) async {
-    final todoMap = await database.delete(_todoTableName, where: '$_columnId = ?', whereArgs: [id]);
-    // ignore: unnecessary_null_comparison
-    return todoMap != null;
+  Future<void> removeItem(int id) async {
+    await database.delete(_todoTableName, where: '$_columnId = ?', whereArgs: [id]);
   }
 
   @override

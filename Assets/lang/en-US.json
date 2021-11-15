@@ -44,6 +44,12 @@
     }
   },
   "countdown": {
+    "notification":{
+      "reminderTitle":"Reminder {}",
+      "addReminder":"Add Reminder",
+      "maxReminder":"Max Reminder",
+      "reminderDate":"Reminder Date Choose"
+    },
     "homeScreenTitle": "Countdown",
     "formTitle": "Title",
     "formDescription": "Description",
@@ -88,5 +94,10 @@
       "confirmBtnText": "Save & Exit",
       "cancelBtnText": "Exit"
     }
+  },
+  "todo": {
+    "todoTitle":"Todo",
+    "clearCompleted":"Clear Completed's",
+    "markAll":"Mark All"
   }
 }

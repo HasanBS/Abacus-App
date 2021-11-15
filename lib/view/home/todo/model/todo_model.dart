@@ -1,5 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../../../core/init/database/idatabase_model.dart';
 
+part 'todo_model.g.dart';
+
+@JsonSerializable()
 class TodoModel extends IDatabaseModel<TodoModel> {
   int? id;
   late String title;
@@ -18,26 +23,10 @@ class TodoModel extends IDatabaseModel<TodoModel> {
   })  : isDone = isDone ?? 0,
         createDate = createDate ?? DateTime.now().toString();
 
-  TodoModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] as int;
-    title = json['title'] as String;
-    description = json['description'] as String;
-    isDone = json['isDone'] as int;
-    createDate = json['createDate'] as String;
-    doneDate = (json['doneDate'] ?? '') as String;
-  }
+  factory TodoModel.fromJson(Map<String, dynamic> json) => _$TodoModelFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    data['description'] = description;
-    data['isDone'] = isDone;
-    data['createDate'] = createDate;
-    data['doneDate'] = doneDate;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$TodoModelToJson(this);
 
   @override
   TodoModel fromJson(Map<String, dynamic> json) {

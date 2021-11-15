@@ -1,5 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../../../core/init/database/idatabase_model.dart';
 
+part 'countdown_model.g.dart';
+
+@JsonSerializable()
 class CountdownModel extends IDatabaseModel<CountdownModel> {
   int? id;
   late String title;
@@ -15,24 +20,10 @@ class CountdownModel extends IDatabaseModel<CountdownModel> {
     String? createDate,
   }) : createDate = createDate ?? DateTime.now().toString();
 
-  CountdownModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] as int;
-    title = json['title'] as String;
-    description = json['description'] as String;
-    goalDate = json['goalDate'] as String;
-    createDate = json['createDate'] as String;
-  }
+  factory CountdownModel.fromJson(Map<String, dynamic> json) => _$CountdownModelFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    data['description'] = description;
-    data['goalDate'] = goalDate;
-    data['createDate'] = createDate;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$CountdownModelToJson(this);
 
   @override
   CountdownModel fromJson(Map<String, dynamic> json) {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -24,22 +23,22 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> with HydratedMixin {
       SplashService.instance.serviceInit();
       if (!state.isFirstApp) {
         yield state.copyWith(isFirstApp: true);
-        await Future.delayed(const Duration(milliseconds: 2000));
+        await Future.delayed(const Duration(milliseconds: 1250));
         await NavigationService.instance.navigateToPageClear(path: NavigationConstants.ONBOARDPAGE);
       } else {
-        await Future.delayed(const Duration(milliseconds: 2000));
+        await Future.delayed(const Duration(milliseconds: 1250));
         await NavigationService.instance.navigateToPageClear(path: NavigationConstants.HOME);
       }
     }
   }
 
   @override
-  SplashState? fromJson(Map<String, dynamic> json) {
-    return SplashState.fromMap(json);
+  SplashState fromJson(Map<String, dynamic> json) {
+    return SplashState.fromJson(json);
   }
 
   @override
-  Map<String, dynamic>? toJson(SplashState state) {
-    return state.toMap();
+  Map<String, dynamic> toJson(SplashState state) {
+    return state.toJson();
   }
 }

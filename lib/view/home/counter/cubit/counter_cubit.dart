@@ -15,9 +15,6 @@ class CounterCubit extends Cubit<CounterState> {
 
   Future<void> insertCounter(CounterModel model) async {
     if (state is CounterListLoadSuccess) {
-      // final List<CounterModel?> updatedCounter =
-      //     List.from((state as CounterListLoadSuccess).counterList)..add(model);
-      // emit(CounterListLoadSuccess(updatedCounter)); //?stady
       await CounterDatabaseProvider.instance.insertItem(model);
       getCounterList();
     }
@@ -42,17 +39,8 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   Future<void> updateCounter(int id, CounterModel model) async {
-    // if (state is CounterListLoadSuccess &&
-    //     (state as CounterListLoadSuccess).counterList.isNotEmpty) {
-    //   final counterlist =
-    //       (state as CounterListLoadSuccess).counterList as List<CounterModel>;
-    //   final updatedCountdowns = counterlist.map((counter) {
-    //     return counter.id == model.id ? model : counter;
-    //   }).toList();
-
     await CounterDatabaseProvider.instance.updateItem(id, model); //?Stady
     getCounterList();
-    //}
   }
 
   Future<void> removeCounter(int id) async {
@@ -84,8 +72,4 @@ class CounterCubit extends Cubit<CounterState> {
       emit(CounterLoadFailure(e));
     }
   }
-  //? dont need
-  // Future<void> removeAction(int id) async {
-  //   await _CounterDatabaseProvider.instance.removeActionItem(id);
-  // }
 }

@@ -14,11 +14,6 @@ class TodoCubit extends Cubit<TodoState> {
   Future<void> insertTodo(TodoModel model) async {
     await TodoDatabaseProvider.instance.insertItem(model);
     getTodoList();
-    // if (state is TodoListLoadSuccess) {
-    //   final List<TodoModel?> updatedTodoList = List.from((state as TodoListLoadSuccess).todoList)
-    //     ..add(model);
-    //   emit(TodoListLoadSuccess(updatedTodoList));
-    // }
   }
 
   Future<void> getTodo(int id) async {
@@ -41,7 +36,7 @@ class TodoCubit extends Cubit<TodoState> {
 
   Future<void> updateTodo(int id, TodoModel model) async {
     if (state is TodoListLoadSuccess) {
-      final todolistItemList = (state as TodoListLoadSuccess).todoList as List<TodoModel?>;
+      final todolistItemList = (state as TodoListLoadSuccess).todoList;
 
       final updatedTodoListItems = todolistItemList.map((todoListItem) {
         return todoListItem!.id == model.id ? model : todoListItem;
@@ -54,7 +49,7 @@ class TodoCubit extends Cubit<TodoState> {
 
   Future<void> checkDoneAllTodos() async {
     if (state is TodoListLoadSuccess) {
-      final todolistItemList = (state as TodoListLoadSuccess).todoList as List<TodoModel?>;
+      final todolistItemList = (state as TodoListLoadSuccess).todoList;
 
       final todoUnDoneList =
           todolistItemList.where((todoListItem) => todoListItem!.isDone == 0).toList();

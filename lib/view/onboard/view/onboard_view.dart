@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../../core/constants/image/image_constatns.dart';
 import '../../../core/constants/navigation/navigation_constants.dart';
 import '../../../core/extension/context_extension.dart';
@@ -33,13 +34,13 @@ class OnBoardView extends StatelessWidget {
                             context.read<OnboardCubit>().changeCurrentIndex(value);
                           },
                           itemBuilder: (context, index) =>
-                              buildColumnBody(state.onBoardItems[index], context),
+                              _buildColumnBody(state.onBoardItems[index], context),
                         );
                       }
                       return Container();
                     },
                   )),
-              Expanded(flex: 2, child: buildRowFooter(context)),
+              Expanded(flex: 2, child: _buildRowFooter(context)),
             ],
           ),
         ),
@@ -47,16 +48,16 @@ class OnBoardView extends StatelessWidget {
     );
   }
 
-  Column buildColumnBody(OnBoardModel onBoardItem, BuildContext context) {
+  Column _buildColumnBody(OnBoardModel onBoardItem, BuildContext context) {
     return Column(
       children: [
         Expanded(flex: 4, child: SvgPicture.asset(onBoardItem.imagePath)),
-        buildColumnDescription(onBoardItem, context),
+        _buildColumnDescription(onBoardItem, context),
       ],
     );
   }
 
-  Column buildColumnDescription(OnBoardModel onBoardItem, BuildContext context) {
+  Column _buildColumnDescription(OnBoardModel onBoardItem, BuildContext context) {
     return Column(
       children: [
         AutoSizeText(
@@ -76,17 +77,17 @@ class OnBoardView extends StatelessWidget {
     );
   }
 
-  Row buildRowFooter(BuildContext context) {
+  Row _buildRowFooter(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildListViewCircles(context),
-        buildFloatingActionButtonSkip(context),
+        _buildListViewCircles(context),
+        _buildFloatingActionButtonSkip(context),
       ],
     );
   }
 
-  BlocBuilder buildListViewCircles(BuildContext context) {
+  BlocBuilder _buildListViewCircles(BuildContext context) {
     return BlocBuilder<OnboardCubit, OnboardState>(
       builder: (context, state) {
         return ListView.builder(
@@ -111,7 +112,7 @@ class OnBoardView extends StatelessWidget {
     );
   }
 
-  Material buildFloatingActionButtonSkip(BuildContext context) {
+  Material _buildFloatingActionButtonSkip(BuildContext context) {
     return Material(
       type: MaterialType.transparency, //Makes it usable on any background color
       child: InkWell(

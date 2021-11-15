@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,18 +8,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sizer/sizer.dart';
 
 import 'core/constants/app/app_constants.dart';
+import 'core/constants/navigation/navigation_constants.dart';
 import 'core/init/lang/lang_manager.dart';
 import 'core/init/navigation/navigation_route.dart';
 import 'core/init/navigation/navigation_service.dart';
 import 'core/init/theme/app_theme_dark.dart';
 import 'core/init/theme/app_theme_light.dart';
 import 'core/init/theme/cubit/theme_cubit.dart';
+
+import 'view/api/notification/service/notification_service.dart';
 import 'view/home/countdown/cubit/countdown_cubit.dart';
 import 'view/home/counter/cubit/counter_cubit.dart';
 import 'view/home/todo/cubit/todo_cubit.dart';
 
-// ignore: avoid_void_async
-void main() async {
+Future<void> main() async {
   //await _init();
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -51,19 +54,23 @@ void main() async {
               return TodoCubit()..getTodoList();
             },
           ),
+          // BlocProvider<NotificationCubit>(
+          //   create: (BuildContext context) {
+          //     return NotificationCubit()..pendingNotifications();
+          //   },
+          // ),
         ],
         child: EasyLocalization(
             supportedLocales: LanguageManager.instance.supportedLocales,
             path: AppConstants.LANG_PATH,
             child: MyApp())
 
-        //     DevicePreview(
-        //   enabled: true,
+        // child: DevicePreview(
         //   builder: (context) {
         //     return EasyLocalization(
-        //         child: MyApp(),
         //         supportedLocales: LanguageManager.instance.supportedLocales,
-        //         path: AppConstants.LANG_PATH);
+        //         path: AppConstants.LANG_PATH,
+        //         child: MyApp());
         //   }, // Wrap your app
         // ),
         ));
@@ -79,9 +86,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+    NotificationService.instance.init();
+    listenNotifications();
   }
+
+  void listenNotifications() =>
+      NotificationService.instance.onNotifications.stream.listen((payload) async {
+        await NavigationService.instance.navigateToPage(path: NavigationConstants.DEFAULT);
+      });
 
   @override
   void didChangePlatformBrightness() {
@@ -102,7 +116,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        //locale: DevicePreview.locale(context), // Add the locale here
+        // locale: DevicePreview.locale(context), // Add the locale here
         //builder: DevicePreview.appBuilder, // Add the builder here
         debugShowCheckedModeBanner: false,
         theme: AppThemeLight.instance.theme,

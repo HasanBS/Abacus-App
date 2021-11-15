@@ -49,6 +49,12 @@
     },
   
     "countdown": {
+      "notification":{
+        "reminderTitle":"Hatırlatıcı {}",
+        "addReminder":"Hatırlatıcı Ekle",
+        "maxReminder":"Maksimum Hatırlatıcı",
+        "reminderDate":"Hatırlatıcı Tarihi Seçiniz"
+      },
       "homeScreenTitle": "Geri Sayım",
       "formTitle": "Başlık",
       "formDescription": "Açıklama",
@@ -97,6 +103,11 @@
         "confirmBtnText":"Kaydet & Çık",
         "cancelBtnText":"Çıkış"
       }
+    },
+    "todo": {
+      "todoTitle":"Yapılacaklar",
+      "clearCompleted":"İşaretlileri Temizle",
+      "markAll":"Hepsini İşaretle"
     }
   }
   

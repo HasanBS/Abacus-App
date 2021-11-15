@@ -11,8 +11,6 @@ class CountdownCubit extends Cubit<CountdownState> {
 
   Future<void> insertCountdown(CountdownModel model) async {
     if (state is CountdownListLoadSuccess) {
-      // final List<CountdownModel?> updatedCountdowns =
-      //     List.from((state as CountdownListLoadSuccess).countdownList)..add(model);
       await CountdownDatabaseProvider.instance.insertItem(model);
       getCountdownList();
     }
@@ -37,17 +35,8 @@ class CountdownCubit extends Cubit<CountdownState> {
   }
 
   Future<void> updateCountdown(int id, CountdownModel model) async {
-    // if (state is CountdownListLoadSuccess &&
-    //     (state as CountdownListLoadSuccess).countdownList.isNotEmpty) {
-    //   final countdownlist = (state as CountdownListLoadSuccess).countdownList
-    //       as List<CountdownModel>;
-    //   final updatedCountdowns = countdownlist.map((countdown) {
-    //     return countdown.id == model.id ? model : countdown;
-    //   }).toList();
-
     await CountdownDatabaseProvider.instance.updateItem(id, model); //?Stady
     getCountdownList();
-    //}
   }
 
   Future<void> removeCountdown(int id) async {

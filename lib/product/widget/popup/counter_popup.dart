@@ -2,95 +2,68 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/components/text/auto_locale_text.dart';
 
 import '../../../view/components/custom_rect_tween.dart';
 import '../../../view/home/counter/cubit/counter_cubit.dart';
 import '../../../view/home/counter/model/counter_model.dart';
-import '../../constants/app/app_constants.dart';
-import '../../extension/context_extension.dart';
-import '../../extension/string_extension.dart';
-import '../../init/lang/locale_keys.g.dart';
-import '../text/auto_locale_text.dart';
+import '../../../core/constants/app/app_constants.dart';
+import '../../../core/extension/context_extension.dart';
+import '../../../core/extension/string_extension.dart';
+import '../../../core/init/lang/locale_keys.g.dart';
 
-class CounterPopup extends StatefulWidget {
-  const CounterPopup({Key? key, required this.heroAddTodo}) : super(key: key);
+class CounterPopup extends StatelessWidget {
+  CounterPopup({Key? key, required this.heroAddTodo}) : super(key: key);
 
   final String heroAddTodo;
-
-  @override
-  _CounterPopupState createState() => _CounterPopupState();
-}
-
-class _CounterPopupState extends State<CounterPopup> {
   final TextEditingController _titleController = TextEditingController();
-
   final TextEditingController _descriptionController = TextEditingController();
-
   final TextEditingController _countTotalController = TextEditingController(text: '0');
-
   final TextEditingController _countRatioController = TextEditingController(text: '1');
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: context.paddingMedium, //!
+        padding: context.paddingMedium,
         child: Hero(
-          tag: widget.heroAddTodo,
+          tag: heroAddTodo,
           createRectTween: (begin, end) {
             return CustomRectTween(begin: begin!, end: end!);
           },
-          child: Material(
-            color: context.colorScheme.primary,
-            elevation: 2,
-            // shape:
-            //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: context.normalValueH, horizontal: context.mediumValueW),
-                child: Form(
-                    //! Form ?
-                    child: Column(
-                  children: [
-                    titleForm,
-                    descriptionForm,
-                    countStartingForm,
-                    countRatioForm,
-                    Divider(
-                      color: context.colorScheme.secondary,
-                      thickness: 0.2,
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: BlocBuilder<CounterCubit, CounterState>(
-                        builder: (context, state) {
-                          return ElevatedButton(
-                            onPressed: () async {
-                              final model = CounterModel(
-                                  title: _titleController.text,
-                                  description: _descriptionController.text,
-                                  counterTotal: double.parse(_countTotalController.text),
-                                  counterRatio: double.parse(_countRatioController.text));
-                              await context.read<CounterCubit>().insertCounter(model);
-                              context.navigation.pop();
-                            },
-                            child: const AutoLocaleText(value: LocaleKeys.counter_pupup_add),
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                )),
+          child: _popupBody(context),
+        ),
+      ),
+    );
+  }
+
+  Material _popupBody(BuildContext context) {
+    return Material(
+      color: context.colorScheme.primary,
+      elevation: 2,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: context.normalValueH, horizontal: context.mediumValueW),
+          child: Column(
+            children: [
+              _titleForm(context),
+              _descriptionForm(context),
+              _countStartingForm(context),
+              _countRatioForm(context),
+              Divider(
+                color: context.colorScheme.secondary,
+                thickness: 0.2,
               ),
-            ),
+              _insertButton
+            ],
           ),
         ),
       ),
     );
   }
 
-  Padding get titleForm {
+  Padding _titleForm(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: context.lowValueH),
       child: TextField(
@@ -108,7 +81,7 @@ class _CounterPopupState extends State<CounterPopup> {
     );
   }
 
-  Padding get descriptionForm {
+  Padding _descriptionForm(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: context.lowValueH),
       child: TextField(
@@ -123,7 +96,7 @@ class _CounterPopupState extends State<CounterPopup> {
     );
   }
 
-  Padding get countStartingForm {
+  Padding _countStartingForm(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: context.lowValueH),
       child: TextFormField(
@@ -137,7 +110,7 @@ class _CounterPopupState extends State<CounterPopup> {
             RegExp(
               AppConstants.NUMBER_REGIEX,
             ),
-          ), //r'[\d+\-\.]'
+          ),
         ],
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
@@ -148,7 +121,7 @@ class _CounterPopupState extends State<CounterPopup> {
     );
   }
 
-  Padding get countRatioForm {
+  Padding _countRatioForm(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: context.lowValueH),
       child: TextFormField(
@@ -170,6 +143,25 @@ class _CounterPopupState extends State<CounterPopup> {
           contentPadding: EdgeInsets.only(left: context.mediumValueW, top: context.mediumValueH),
         ),
       ),
+    );
+  }
+
+  BlocBuilder<CounterCubit, CounterState> get _insertButton {
+    return BlocBuilder<CounterCubit, CounterState>(
+      builder: (context, state) {
+        return ElevatedButton(
+          onPressed: () async {
+            final model = CounterModel(
+                title: _titleController.text,
+                description: _descriptionController.text,
+                counterTotal: double.parse(_countTotalController.text),
+                counterRatio: double.parse(_countRatioController.text));
+            await context.read<CounterCubit>().insertCounter(model);
+            context.navigation.pop();
+          },
+          child: const AutoLocaleText(value: LocaleKeys.counter_pupup_add),
+        );
+      },
     );
   }
 }

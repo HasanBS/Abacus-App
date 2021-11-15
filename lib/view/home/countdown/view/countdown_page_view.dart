@@ -1,18 +1,16 @@
-import 'dart:async';
-
-import 'package:age_calculator/age_calculator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bottom_picker/bottom_picker.dart';
-import 'package:cool_alert/cool_alert.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../api/notification/view/notification_view.dart';
+import '../../../../product/widget/alertDialog/cool_alert_dialog.dart';
+import 'components/duration_buttons.dart';
+import '../../../../product/widget/appbar/edit_appbar.dart';
+
 import '../../../../core/constants/app/app_constants.dart';
 import '../../../../core/constants/image/image_constatns.dart';
 import '../../../../core/extension/context_extension.dart';
-import '../../../../core/extension/duration_extension.dart';
 import '../../../../core/extension/string_extension.dart';
 import '../../../../core/init/lang/locale_keys.g.dart';
 import '../cubit/countdown_cubit.dart';
@@ -32,78 +30,41 @@ class _CountdownPageViewState extends State<CountdownPageView> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
 
-  late DateTime date;
-
-  DateTime? reminder;
+  late DateTime _date;
 
   bool isChange = false;
   bool onEdit = false;
-  late bool isPast;
 
-  late int remaningYears;
-  late int remaningMonths;
-  late int remaningDays;
+  // ignore: prefer_function_declarations_over_variables
+  ValueChanged<bool> onValueChange = (value) {
+    value = false;
+  };
 
-  late int remaningHours;
-  late int remaningMinutes;
-  late int remaningSeconds;
+  late ValueChanged<DateTime> onDateChange;
 
-  late Timer timer;
-
-  void durationTime() {
-    if (mounted) {
+  @override
+  void initState() {
+    _date = DateTime.parse(widget.model.goalDate);
+    _titleController = TextEditingController(text: widget.model.title);
+    _descriptionController = TextEditingController(text: widget.model.description);
+    onValueChange = (value) {
       setState(() {
-        final duration = date.difference(DateTime.now());
-        if (duration.inSeconds > 0) {
-          remaningHours = duration.hours;
-          remaningMinutes = duration.minutes;
-          remaningSeconds = duration.seconds;
-        } else {
-          remaningHours = duration.pastHours;
-          remaningMinutes = duration.pastMinutes;
-          remaningSeconds = duration.pastSeconds;
-        }
+        isChange = value;
       });
-    }
+    };
+    onDateChange = (value) {
+      setState(() {
+        _date = value;
+      });
+    };
+    super.initState();
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    timer.cancel();
     super.dispose();
-  }
-
-  void durationDate() {
-    setState(() {
-      final duration = date.difference(DateTime.now());
-      if (duration.inSeconds > 0) {
-        final dateDuration = AgeCalculator.dateDifference(fromDate: DateTime.now(), toDate: date);
-        isPast = false;
-        remaningYears = dateDuration.years;
-        remaningMonths = dateDuration.months;
-        remaningDays = dateDuration.days;
-      } else {
-        final dateDuration = AgeCalculator.age(date);
-        isPast = true;
-        remaningYears = dateDuration.years;
-        remaningMonths = dateDuration.months;
-        remaningDays = dateDuration.days;
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController = TextEditingController(text: widget.model.title);
-    _descriptionController = TextEditingController(text: widget.model.description);
-    date = DateTime.parse(widget.model.goalDate);
-
-    durationDate();
-    durationTime();
-    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) => durationTime());
   }
 
   @override
@@ -111,7 +72,7 @@ class _CountdownPageViewState extends State<CountdownPageView> {
     return WillPopScope(
       onWillPop: () async {
         if (onEdit && isChange) {
-          alertDialog(context);
+          _alertDialog(context);
           return false;
         }
         return true;
@@ -125,64 +86,29 @@ class _CountdownPageViewState extends State<CountdownPageView> {
   }
 
   AppBar appBar(BuildContext context) {
-    return AppBar(
-      leading: IconButton(
-        icon: Icon(
-          ImageConstants.instance.backArrow,
-          color: context.colorScheme.secondary,
-        ),
-        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-        onPressed: () {
-          Navigator.maybePop(context);
-        },
-      ),
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(0.5),
-        child: Container(
-          width: context.dynamicWidth(0.9),
-          color: context.colorScheme.secondary,
-          height: 0.5,
-        ),
-      ),
-      actions: [
-        Padding(
-          padding: context.horizontalPaddingMedium,
-          child: ElevatedButton(
-            onPressed: () async {
-              if (!onEdit) {
-                onEdit = true;
-                return;
-              }
-              onEdit = false;
-
-              final updatedModel = CountdownModel(
-                  id: widget.model.id,
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  goalDate: date.toString());
-
-              widget.model.title = updatedModel.title;
-
-              await context.read<CountdownCubit>().updateCountdown(updatedModel.id!, updatedModel);
-            },
-            style: ElevatedButton.styleFrom(
-                side: BorderSide.none,
-                shadowColor: Colors.transparent,
-                primary: context.colorScheme.primary),
-            child: AutoSizeText(
-              onEdit
-                  ? LocaleKeys.countdown_page_appBarSave.locale
-                  : LocaleKeys.countdown_page_appBarEdit.locale,
-              style: context.textTheme.headline6,
-            ),
-          ),
-        ),
-        //icon timer for saving
-      ],
-      title: AutoSizeText(
-        widget.model.title,
-        style: context.textTheme.headline6,
-      ),
+    return EditAppBar(
+      context: context,
+      title: widget.model.title,
+      onEdit: onEdit,
+      editTitle: LocaleKeys.countdown_page_appBarEdit.locale,
+      saveTitle: LocaleKeys.countdown_page_appBarSave.locale,
+      onPressed: () async {
+        if (!onEdit) {
+          setState(() {
+            onEdit = true;
+          });
+          return;
+        }
+        onEdit = false;
+        final updatedModel = CountdownModel(
+            id: widget.model.id,
+            title: _titleController.text,
+            description: _descriptionController.text,
+            goalDate: _date.toString());
+        widget.model.title = updatedModel.title;
+        await context.read<CountdownCubit>().updateCountdown(updatedModel.id!, updatedModel);
+        setState(() {});
+      },
     );
   }
 
@@ -192,62 +118,38 @@ class _CountdownPageViewState extends State<CountdownPageView> {
       children: [
         Column(
           children: [
-            _titleForm,
-            dateText(context),
-            descriptionForm,
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(
-                  left: context.mediumValueW, top: context.lowValueH, right: context.mediumValueW),
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                child: _reminderButton(context),
+            Flexible(
+              flex: 0,
+              fit: FlexFit.tight,
+              child: _titleForm,
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 0,
+              child: _dateText,
+            ),
+            Flexible(
+              flex: 0,
+              fit: FlexFit.tight,
+              child: _descriptionForm,
+            ),
+            if (_date.isAfter(DateTime.now()))
+              Flexible(
+                flex: 0,
+                fit: FlexFit.tight,
+                child: NotificationView(model: widget.model),
               ),
-            ),
           ],
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            isPastText(context),
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: _dateButton(context),
-            ),
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: _timeButton(context),
-            ),
-          ],
+        Padding(
+          padding: EdgeInsets.only(top: context.mediumValueH),
+          child: DurationButtons(
+            model: widget.model,
+            onEdit: onEdit,
+            onValueChange: onValueChange,
+            onDateChange: onDateChange,
+          ),
         ),
-      ],
-    );
-  }
-
-  Widget isPastText(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (isPast)
-          Icon(
-            ImageConstants.instance.leftChevron,
-            color: context.colorScheme.secondary,
-            size: 25,
-          )
-        else
-          Container(),
-        AutoSizeText(
-          isPast ? LocaleKeys.countdown_page_since.locale : LocaleKeys.countdown_page_until.locale,
-          style: context.textTheme.subtitle2,
-        ),
-        if (!isPast)
-          Icon(
-            ImageConstants.instance.rightChevron,
-            color: context.colorScheme.secondary,
-            size: 25,
-          )
-        else
-          Container(),
       ],
     );
   }
@@ -256,14 +158,12 @@ class _CountdownPageViewState extends State<CountdownPageView> {
     return _titleController.text == "" && !onEdit
         ? Container()
         : Padding(
-            padding: EdgeInsets.only(
-                left: context.mediumValueW, top: context.lowValueH, right: context.mediumValueW),
+            padding: EdgeInsets.only(left: context.mediumValueW, right: context.mediumValueW),
             child: TextField(
               onChanged: (_) {
                 isChange = true;
               },
               style: context.textTheme.headline4,
-              //textAlign: TextAlign.center,
               enabled: onEdit,
               controller: _titleController,
               inputFormatters: [
@@ -277,27 +177,19 @@ class _CountdownPageViewState extends State<CountdownPageView> {
           );
   }
 
-  Container dateText(BuildContext context) {
+  Container get _dateText {
     return Container(
-      padding: EdgeInsets.only(
-          left: context.mediumValueW, bottom: context.lowValueH, top: context.lowValueH),
+      padding: EdgeInsets.only(left: context.mediumValueW, top: context.lowValueH),
       alignment: Alignment.centerLeft,
       child: AutoSizeText(
-        dateString,
+        '${_date.day.timeString}.${_date.month.timeString}.${_date.year}',
         style: context.textTheme.headline6, //headline6
       ),
     );
   }
 
-  String get dateString {
-    //?
-    final dateForm =
-        "${date.day < 10 ? "0${date.day}" : date.day.toString()}.${date.month < 10 ? "0${date.month}" : date.month.toString()}.${date.year}";
-    return dateForm;
-  }
-
-  Widget get descriptionForm {
-    return _descriptionController.text == "" && !onEdit
+  Widget get _descriptionForm {
+    return _descriptionController.text == '' && !onEdit
         ? Container()
         : Padding(
             padding: EdgeInsets.only(left: context.mediumValueW, right: context.mediumValueW),
@@ -305,7 +197,6 @@ class _CountdownPageViewState extends State<CountdownPageView> {
               onChanged: (_) {
                 isChange = true;
               },
-              // style: context.textTheme.headline6,
               enabled: onEdit,
               controller: _descriptionController,
               decoration: InputDecoration(
@@ -317,250 +208,29 @@ class _CountdownPageViewState extends State<CountdownPageView> {
           );
   }
 
-  ElevatedButton _dateButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onEdit
-          ? () {
-              _openDatePicker(context);
-            }
-          : null,
-      style: ElevatedButton.styleFrom(
-        side: onEdit
-            ? BorderSide(
-                color: context.colorScheme.secondary,
-                width: 2.0,
-              )
-            : BorderSide.none,
-        onPrimary: Colors.transparent,
-        primary: Colors.transparent,
-        shadowColor: Colors.transparent,
-        onSurface: context.colorScheme.primary,
-      ),
-      child: dateButtonText,
-    );
-  }
-
-  ElevatedButton _reminderButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: !isPast
-          ? () {
-              _openRemainderPicker(context);
-            }
-          : null,
-      style: ElevatedButton.styleFrom(
-        side: !isPast
-            ? BorderSide(
-                color: context.colorScheme.secondary,
-                width: 2.0,
-              )
-            : BorderSide.none,
-        onPrimary: context.colorScheme.secondary,
-        primary: Colors.transparent,
-        shadowColor: Colors.transparent,
-        onSurface: context.colorScheme.primary,
-      ),
-      child: reminderText,
-    );
-  }
-
-  AutoSizeText get reminderText {
-    return AutoSizeText(
-      reminder != null
-          ? ('Remainder ${reminder!.hour.dateString}:${reminder!.minute.dateString}')
-          : 'Remainder',
-      maxLines: 1,
-    );
-  }
-  //!
-
-  Widget get dateButtonText {
-    return SizedBox(
-      height: context.dynamicHeight(0.1),
-      child: AutoSizeText(
-        (remaningYears == 0
-                ? ""
-                : LocaleKeys.countdown_page_year.tr(args: [remaningYears.toString()])) +
-            (remaningMonths == 0
-                ? ""
-                : LocaleKeys.countdown_page_month.tr(args: [remaningMonths.toString()])) +
-            (remaningDays == 0
-                ? ""
-                : LocaleKeys.countdown_page_day.tr(args: [remaningDays.toString()])),
-        style: context.textTheme.headline1,
-        maxLines: 1,
-        group: autoSizeGroup,
-        //.copyWith(fontSize: context.dynamicWidth(0.15)), //headline2
-      ),
-    );
-  }
-
-  Padding _timeButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: context.highValueH,
-      ),
-      child: ElevatedButton(
-        onPressed: onEdit
-            ? () {
-                _openTimePicker(context);
-              }
-            : null,
-        style: ElevatedButton.styleFrom(
-          side: onEdit
-              ? BorderSide(
-                  color: context.colorScheme.secondary,
-                  width: 2.0,
-                )
-              : BorderSide.none,
-          onPrimary: Colors.transparent,
-          primary: Colors.transparent,
-          shadowColor: Colors.transparent,
-          onSurface: context.colorScheme.primary,
-        ),
-        child: timeButtonText,
-      ),
-    );
-  }
-
-  Widget get timeButtonText {
-    return SizedBox(
-      height: context.dynamicHeight(0.11),
-      child: AutoSizeText(
-        (remaningHours == 0
-                ? ""
-                : LocaleKeys.countdown_page_hour.tr(args: [remaningHours.toString()])) +
-            (remaningMinutes == 0
-                ? ""
-                : LocaleKeys.countdown_page_minute.tr(args: [remaningMinutes.toString()])) +
-            LocaleKeys.countdown_page_second.tr(args: [remaningSeconds.toString()]),
-
-        style: context.textTheme.headline1,
-        maxLines: 1,
-        group: autoSizeGroup,
-        // .copyWith(fontSize: context.dynamicWidth(0.15)), //headline 2
-      ),
-    );
-  }
-
-  dynamic _openRemainderPicker(BuildContext context) {
-    BottomPicker.time(
-      textStyle: context.textTheme.headline6!,
-      backgroundColor: context.colorScheme.primary,
-      buttonColor: context.colorScheme.secondary,
-      iconColor: context.colorScheme.primary,
-      use24hFormat: true,
-      initialDateTime: DateTime.utc(0),
-      dismissable: true,
-      title: 'Choose a hour to remind before',
-      titleStyle: context.textTheme.headline6!,
-      onSubmit: (index) {
-        setState(() {
-          final newDate = index as DateTime;
-          reminder = DateTime(
-            newDate.year,
-            newDate.month,
-            newDate.day,
-            newDate.hour,
-            newDate.minute,
-            newDate.second,
-            newDate.millisecond,
-            newDate.microsecond,
-          );
-        });
-      },
-    ).show(context);
-  }
-
-  dynamic _openDatePicker(BuildContext context) {
-    BottomPicker.date(
-      onChange: (_) {
-        isChange = true;
-      },
-      textStyle: context.textTheme.headline6!, //headline 6
-      backgroundColor: context.colorScheme.primary,
-      buttonColor: context.colorScheme.secondary,
-      iconColor: context.colorScheme.primary,
-      initialDateTime: date,
-      dismissable: true,
-      title: LocaleKeys.countdown_pickerDateTitle.locale,
-      titleStyle: context.textTheme.headline6!,
-      onSubmit: (index) {
-        setState(() {
-          final newDate = index as DateTime;
-          date = DateTime(
-            newDate.year,
-            newDate.month,
-            newDate.day,
-            date.hour,
-            date.minute,
-            date.second,
-            date.millisecond,
-            date.microsecond,
-          );
-          durationDate();
-        });
-      },
-    ).show(context);
-  }
-
-  dynamic _openTimePicker(BuildContext context) {
-    BottomPicker.time(
-            onChange: (_) {
-              isChange = true;
-            },
-            textStyle: context.textTheme.headline6!,
-            backgroundColor: context.colorScheme.primary,
-            buttonColor: context.colorScheme.secondary,
-            iconColor: context.colorScheme.primary,
-            initialDateTime: date,
-            dismissable: true,
-            title: LocaleKeys.countdown_pickerTimeTitle.locale,
-            titleStyle: context.textTheme.headline6!,
-            onSubmit: (index) {
-              setState(() {
-                final newTime = index as DateTime;
-                date = DateTime(date.year, date.month, date.day, newTime.hour, newTime.minute,
-                    date.second, date.millisecond, date.microsecond);
-
-                // time!.hour, time!.minute, time!.second
-                // date = index as DateTime;
-              });
-            },
-            use24hFormat: true)
-        .show(context);
-  }
-
-  dynamic alertDialog(BuildContext context) {
-    //?
-    CoolAlert.show(
+  dynamic _alertDialog(BuildContext context) {
+    CoolAlertDialog(
+      context: context,
+      title: LocaleKeys.countdown_save_alertDialog_questionText.locale,
+      confirmBtnText: LocaleKeys.countdown_save_alertDialog_confirmBtnText.locale,
+      cancelBtnText: LocaleKeys.countdown_save_alertDialog_cancelBtnText.locale,
+      lottieAssetLight: ImageConstants.instance.shieldLightLoti,
+      lottieAssetDark: ImageConstants.instance.shieldDarkLoti,
       onConfirmBtnTap: () async {
         final updatedModel = CountdownModel(
             id: widget.model.id,
             title: _titleController.text,
             description: _descriptionController.text,
-            goalDate: date.toString());
+            goalDate: _date.toString());
 
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         await context.read<CountdownCubit>().updateCountdown(updatedModel.id!, updatedModel);
       },
-      onCancelBtnTap: () {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+      onCancelBtnTap: () async {
+        context.navigation.pop();
+        context.navigation.pop();
       },
-      lottieAsset: context.isDarkTheme
-          ? ImageConstants.instance.shieldDarkLoti
-          : ImageConstants.instance.shieldLightLoti,
-      context: context,
-      type: CoolAlertType.confirm,
-      title: LocaleKeys.countdown_save_alertDialog_questionText.locale,
-      confirmBtnText: LocaleKeys.countdown_save_alertDialog_confirmBtnText.locale,
-      cancelBtnText: LocaleKeys.countdown_save_alertDialog_cancelBtnText.locale,
-      cancelBtnTextStyle: context.textTheme.bodyText1,
-      confirmBtnTextStyle: context.textTheme.bodyText1,
-      confirmBtnColor: context.colorScheme.primary,
-      borderRadius: 0,
-      backgroundColor: context.colorScheme.primary,
     );
   }
 }

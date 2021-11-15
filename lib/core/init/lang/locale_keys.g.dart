@@ -33,6 +33,11 @@ abstract class  LocaleKeys {
   static const counter_save_alertDialog_cancelBtnText = 'counter.save_alertDialog.cancelBtnText';
   static const counter_save_alertDialog = 'counter.save_alertDialog';
   static const counter = 'counter';
+  static const countdown_notification_reminderTitle = 'countdown.notification.reminderTitle';
+  static const countdown_notification_addReminder = 'countdown.notification.addReminder';
+  static const countdown_notification_maxReminder = 'countdown.notification.maxReminder';
+  static const countdown_notification_reminderDate = 'countdown.notification.reminderDate';
+  static const countdown_notification = 'countdown.notification';
   static const countdown_homeScreenTitle = 'countdown.homeScreenTitle';
   static const countdown_formTitle = 'countdown.formTitle';
   static const countdown_formDescription = 'countdown.formDescription';
@@ -73,5 +78,9 @@ abstract class  LocaleKeys {
   static const countdown_save_alertDialog_cancelBtnText = 'countdown.save_alertDialog.cancelBtnText';
   static const countdown_save_alertDialog = 'countdown.save_alertDialog';
   static const countdown = 'countdown';
+  static const todo_todoTitle = 'todo.todoTitle';
+  static const todo_clearCompleted = 'todo.clearCompleted';
+  static const todo_markAll = 'todo.markAll';
+  static const todo = 'todo';
 
 }

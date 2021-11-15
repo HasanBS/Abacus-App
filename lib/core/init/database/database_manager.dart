@@ -7,8 +7,8 @@ abstract class DatabaseManager<T extends IDatabaseModel> {
   Future<void> initDB();
   Future<T?> getItem(int id);
   Future<List<T?>> getList();
-  Future<bool> updateItem(int id, T model);
-  Future<bool> removeItem(int id);
-  Future<bool> insertItem(T model);
+  Future<void> updateItem(int id, T model);
+  Future<void> removeItem(int id);
+  Future<void> insertItem(T model);
   Future<void> close();
 }

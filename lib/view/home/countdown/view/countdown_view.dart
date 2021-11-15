@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../product/widget/buttonfields/countdown_button.dart';
+import '../../../../core/components/card/error_widget.dart';
 
-import '../../../../core/components/button/countdown_button.dart';
 import '../../../../core/extension/context_extension.dart';
 import '../cubit/countdown_cubit.dart';
 import '../model/countdown_model.dart';
@@ -12,15 +13,16 @@ class CountdownView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<CountdownModel?> countdownList = [];
+
     return BlocBuilder<CountdownCubit, CountdownState>(
       builder: (context, state) {
         if (state is CountdownListLoadSuccess) {
-          print("CountdownListLoadSuccess");
           countdownList = state.countdownList;
-        } else if (state is CountdownLoadInProgress)
-          print("CountdownLoadInProgress");
-        else if (state is CountdownLoadFailure) print("CountdownLoadFailure  => ${state.e}");
-
+        } else if (state is CountdownLoadInProgress) {
+          const CircularProgressIndicator();
+        } else if (state is CountdownLoadFailure) {
+          ErrorCard(error: 'CountdownLoadFailure  => ${state.e}');
+        }
         return ListView(
           children: [
             context.emptySizedHeightBoxLow,
@@ -32,15 +34,6 @@ class CountdownView extends StatelessWidget {
             context.emptySizedHeightBoxHigh,
           ],
         );
-
-        // return ListView.builder(
-        //     itemCount: countdownList.length,
-        //     itemBuilder: (BuildContext context, int index) {
-
-        //       return CountdownField(
-        //         model: countdownList[index]!,
-        //       );
-        //     });
       },
     );
   }

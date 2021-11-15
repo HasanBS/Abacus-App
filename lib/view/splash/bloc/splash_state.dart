@@ -25,20 +25,15 @@ class SplashState extends Equatable {
   @override
   bool get stringify => true;
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'isFirstApp': isFirstApp,
     };
   }
 
-  factory SplashState.fromMap(Map<String, dynamic> map) {
+  factory SplashState.fromJson(Map<String, dynamic> map) {
     return SplashState(
       isFirstApp: map['isFirstApp'] as bool,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory SplashState.fromJson(String source) =>
-      SplashState.fromMap(json.decode(source) as Map<String, dynamic>);
 }

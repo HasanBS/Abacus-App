@@ -1,5 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../../../core/init/database/idatabase_model.dart';
 
+part 'counter_model.g.dart';
+
+@JsonSerializable()
 class CounterModel extends IDatabaseModel<CounterModel> {
   //extends DatabaseModel <Counter>
   int? id;
@@ -19,26 +24,10 @@ class CounterModel extends IDatabaseModel<CounterModel> {
       : createDate = createDate ?? DateTime.now().toString();
 
   @override
-  CounterModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] as int;
-    title = json['title'] as String;
-    description = json['description'] as String;
-    counterTotal = json['counterTotal'] as double;
-    counterRatio = json['counterRatio'] as double;
-    createDate = json['createDate'] as String;
-  }
+  factory CounterModel.fromJson(Map<String, dynamic> json) => _$CounterModelFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    data['description'] = description;
-    data['counterTotal'] = counterTotal;
-    data['counterRatio'] = counterRatio;
-    data['createDate'] = createDate;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$CounterModelToJson(this);
 
   @override
   CounterModel fromJson(Map<String, dynamic> json) {
