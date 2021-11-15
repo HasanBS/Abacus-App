@@ -54,11 +54,6 @@ Future<void> main() async {
               return TodoCubit()..getTodoList();
             },
           ),
-          // BlocProvider<NotificationCubit>(
-          //   create: (BuildContext context) {
-          //     return NotificationCubit()..pendingNotifications();
-          //   },
-          // ),
         ],
         child: EasyLocalization(
             supportedLocales: LanguageManager.instance.supportedLocales,
