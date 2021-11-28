@@ -44,6 +44,9 @@ dependencies:
   animated_flip_counter: ^0.1.2
   fitted_text_field_container: ^2.0.0
   
+
+  
+
   timezone: ^0.8.0
   flutter_local_notifications: ^9.0.2
   rxdart: ^0.27.2
@@ -55,6 +58,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_screenutil: ^5.0.0+2
   lint: ^1.6.0
   flutter_launcher_icons: ^0.9.2
   build_runner:

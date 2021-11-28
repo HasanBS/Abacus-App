@@ -35,40 +35,40 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]).then((_) {
     runApp(MultiBlocProvider(
-        providers: [
-          BlocProvider<ThemeCubit>(
-            create: (context) => ThemeCubit(),
-          ),
-          BlocProvider<CounterCubit>(
-            create: (BuildContext context) {
-              return CounterCubit()..getCounterList();
-            },
-          ),
-          BlocProvider<CountdownCubit>(
-            create: (BuildContext context) {
-              return CountdownCubit()..getCountdownList();
-            },
-          ),
-          BlocProvider<TodoCubit>(
-            create: (BuildContext context) {
-              return TodoCubit()..getTodoList();
-            },
-          ),
-        ],
-        child: EasyLocalization(
-            supportedLocales: LanguageManager.instance.supportedLocales,
-            path: AppConstants.LANG_PATH,
-            child: MyApp())
+      providers: [
+        BlocProvider<ThemeCubit>(
+          create: (context) => ThemeCubit(),
+        ),
+        BlocProvider<CounterCubit>(
+          create: (BuildContext context) {
+            return CounterCubit()..getCounterList();
+          },
+        ),
+        BlocProvider<CountdownCubit>(
+          create: (BuildContext context) {
+            return CountdownCubit()..getCountdownList();
+          },
+        ),
+        BlocProvider<TodoCubit>(
+          create: (BuildContext context) {
+            return TodoCubit()..getTodoList();
+          },
+        ),
+      ],
+      // child: EasyLocalization(
+      //     supportedLocales: LanguageManager.instance.supportedLocales,
+      //     path: AppConstants.LANG_PATH,
+      //     child: MyApp())
 
-        // child: DevicePreview(
-        //   builder: (context) {
-        //     return EasyLocalization(
-        //         supportedLocales: LanguageManager.instance.supportedLocales,
-        //         path: AppConstants.LANG_PATH,
-        //         child: MyApp());
-        //   }, // Wrap your app
-        // ),
-        ));
+      child: DevicePreview(
+        builder: (context) {
+          return EasyLocalization(
+              supportedLocales: LanguageManager.instance.supportedLocales,
+              path: AppConstants.LANG_PATH,
+              child: MyApp());
+        }, // Wrap your app
+      ),
+    ));
   });
 }
 
@@ -110,9 +110,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       return MaterialApp(
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        // locale: DevicePreview.locale(context), // Add the locale here
-        //builder: DevicePreview.appBuilder, // Add the builder here
+        // locale: context.locale,
+        locale: DevicePreview.locale(context), // Add the locale here
+        builder: DevicePreview.appBuilder, // Add the builder here
         debugShowCheckedModeBanner: false,
         theme: AppThemeLight.instance.theme,
         darkTheme: AppThemeDark.instance.theme,

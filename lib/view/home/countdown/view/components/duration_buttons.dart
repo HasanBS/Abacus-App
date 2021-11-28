@@ -13,6 +13,7 @@ import '../../../../../product/widget/bottomPicker/time_picker.dart';
 import '../../model/countdown_model.dart';
 import '../../model/duration_model.dart';
 import 'countdown_calculator.dart';
+import 'package:sizer/sizer.dart';
 
 class DurationButtons extends StatefulWidget {
   final CountdownModel model;
@@ -71,19 +72,31 @@ class _DurationButtonsState extends State<DurationButtons> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        isPastText(context),
-        FittedBox(
-          fit: BoxFit.fitWidth,
-          child: _dateButton(context),
-        ),
-        FittedBox(
-          fit: BoxFit.fitWidth,
-          child: _timeButton(context),
-        ),
-      ],
+    return SizedBox(
+      height: 25.h,
+      child: Column(
+        //mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 5.h,
+            child: isPastText(context),
+          ),
+          SizedBox(
+            height: 10.h,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: _dateButton(context),
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+            child: FittedBox(
+              fit: BoxFit.fitHeight,
+              child: _timeButton(context),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -136,10 +149,7 @@ class _DurationButtonsState extends State<DurationButtons> {
         shadowColor: Colors.transparent,
         onSurface: context.colorScheme.primary,
       ),
-      child: SizedBox(
-        height: context.dynamicHeight(0.1),
-        child: _dateText(_dateDuration, context),
-      ),
+      child: _dateText(_dateDuration, context),
     );
   }
 
@@ -160,28 +170,23 @@ class _DurationButtonsState extends State<DurationButtons> {
     );
   }
 
-  Padding _timeButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: context.mediumValueH,
+  ElevatedButton _timeButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: widget.onEdit
+          ? () {
+              _openTimePicker(context);
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        side: widget.onEdit
+            ? BorderSide(color: context.colorScheme.secondary, width: 2.0)
+            : BorderSide.none,
+        onPrimary: Colors.transparent,
+        primary: Colors.transparent,
+        shadowColor: Colors.transparent,
+        onSurface: context.colorScheme.primary,
       ),
-      child: ElevatedButton(
-        onPressed: widget.onEdit
-            ? () {
-                _openTimePicker(context);
-              }
-            : null,
-        style: ElevatedButton.styleFrom(
-          side: widget.onEdit
-              ? BorderSide(color: context.colorScheme.secondary, width: 2.0)
-              : BorderSide.none,
-          onPrimary: Colors.transparent,
-          primary: Colors.transparent,
-          shadowColor: Colors.transparent,
-          onSurface: context.colorScheme.primary,
-        ),
-        child: timeText(context, _dateDuration),
-      ),
+      child: timeText(context, _dateDuration),
     );
   }
 

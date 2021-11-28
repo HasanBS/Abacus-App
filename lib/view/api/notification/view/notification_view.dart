@@ -9,6 +9,7 @@ import '../cubit/notification_cubit.dart';
 import '../../../home/countdown/model/countdown_model.dart';
 import '../../../../core/extension/context_extension.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:sizer/sizer.dart';
 
 import '/core/extension/string_extension.dart';
 
@@ -32,10 +33,11 @@ class NotificationButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Column(
-        children: [
-          ElevatedButton(
+    return Column(
+      children: [
+        SizedBox(
+          height: 6.h,
+          child: ElevatedButton(
             onPressed: context.watch<NotificationCubit>().notificationLengt() < 3
                 ? () {
                     _openNotificationPicker(context, (index) async {
@@ -63,58 +65,58 @@ class NotificationButtons extends StatelessWidget {
               ),
             ),
           ),
-          CustomDivider(context),
-          SizedBox(
-            height: context.dynamicHeight(0.17),
-            child: BlocBuilder<NotificationCubit, NotificationState>(
-              builder: (context, state) {
-                context.watch<NotificationCubit>().getNotifications(model.id!);
+        ),
+        CustomDivider(context),
+        SizedBox(
+          height: 17.h,
+          child: BlocBuilder<NotificationCubit, NotificationState>(
+            builder: (context, state) {
+              context.watch<NotificationCubit>().getNotifications(model.id!);
 
-                if (state is NotificationLoadSucces) {
-                  return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.notificationList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _openNotificationPicker(
-                                  context,
-                                  (date) async {
-                                    final newTime = date as DateTime;
-                                    final temp = state.notificationList[index]!;
-                                    await context.read<NotificationCubit>().updateNotification(
-                                        temp.id, temp.title!, temp.body!, newTime);
-                                  },
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                side: BorderSide.none,
-                                primary: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              child: AutoSizeText(state.notificationList[index]!.payload!),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  context
-                                      .read<NotificationCubit>()
-                                      .cancelNotification(state.notificationList[index]!.id);
+              if (state is NotificationLoadSucces) {
+                return ListView.builder(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.notificationList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              _openNotificationPicker(
+                                context,
+                                (date) async {
+                                  final newTime = date as DateTime;
+                                  final temp = state.notificationList[index]!;
+                                  await context.read<NotificationCubit>().updateNotification(
+                                      temp.id, temp.title!, temp.body!, newTime);
                                 },
-                                icon: const Icon(Icons.cancel_outlined))
-                          ],
-                        );
-                      });
-                } else {
-                  return Container();
-                }
-              },
-            ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              side: BorderSide.none,
+                              primary: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                            ),
+                            child: AutoSizeText(state.notificationList[index]!.payload!),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                context
+                                    .read<NotificationCubit>()
+                                    .cancelNotification(state.notificationList[index]!.id);
+                              },
+                              icon: const Icon(Icons.cancel_outlined))
+                        ],
+                      );
+                    });
+              } else {
+                return Container();
+              }
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

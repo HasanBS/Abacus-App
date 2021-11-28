@@ -15,6 +15,7 @@ import '../../../../core/extension/string_extension.dart';
 import '../../../../core/init/lang/locale_keys.g.dart';
 import '../cubit/countdown_cubit.dart';
 import '../model/countdown_model.dart';
+import 'package:sizer/sizer.dart';
 
 class CountdownPageView extends StatefulWidget {
   final CountdownModel model;
@@ -118,36 +119,35 @@ class _CountdownPageViewState extends State<CountdownPageView> {
       children: [
         Column(
           children: [
-            Flexible(
-              flex: 0,
-              fit: FlexFit.tight,
+            SizedBox(
+              height: 10.h,
               child: _titleForm,
             ),
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 0,
+            SizedBox(
+              height: 5.h,
               child: _dateText,
             ),
-            Flexible(
-              flex: 0,
-              fit: FlexFit.tight,
+            SizedBox(
+              height: 15.h,
               child: _descriptionForm,
             ),
             if (_date.isAfter(DateTime.now()))
-              Flexible(
-                flex: 0,
-                fit: FlexFit.tight,
+              SizedBox(
+                height: 26.h,
                 child: NotificationView(model: widget.model),
               ),
           ],
         ),
-        Padding(
-          padding: EdgeInsets.only(top: context.mediumValueH),
-          child: DurationButtons(
-            model: widget.model,
-            onEdit: onEdit,
-            onValueChange: onValueChange,
-            onDateChange: onDateChange,
+        SizedBox(
+          height: 26.h,
+          child: Padding(
+            padding: EdgeInsets.only(top: context.lowValueH),
+            child: DurationButtons(
+              model: widget.model,
+              onEdit: onEdit,
+              onValueChange: onValueChange,
+              onDateChange: onDateChange,
+            ),
           ),
         ),
       ],
@@ -163,7 +163,6 @@ class _CountdownPageViewState extends State<CountdownPageView> {
               onChanged: (_) {
                 isChange = true;
               },
-              style: context.textTheme.headline4,
               enabled: onEdit,
               controller: _titleController,
               inputFormatters: [
@@ -234,3 +233,46 @@ class _CountdownPageViewState extends State<CountdownPageView> {
     );
   }
 }
+
+
+  // Column body(BuildContext context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Column(
+  //         children: [
+  //           Flexible(
+  //             flex: 0,
+  //             fit: FlexFit.tight,
+  //             child: _titleForm,
+  //           ),
+  //           Flexible(
+  //             fit: FlexFit.tight,
+  //             flex: 0,
+  //             child: _dateText,
+  //           ),
+  //           Flexible(
+  //             flex: 0,
+  //             fit: FlexFit.tight,
+  //             child: _descriptionForm,
+  //           ),
+  //           if (_date.isAfter(DateTime.now()))
+  //             Flexible(
+  //               flex: 0,
+  //               fit: FlexFit.tight,
+  //               child: NotificationView(model: widget.model),
+  //             ),
+  //         ],
+  //       ),
+  //       Padding(
+  //         padding: EdgeInsets.only(top: context.mediumValueH),
+  //         child: DurationButtons(
+  //           model: widget.model,
+  //           onEdit: onEdit,
+  //           onValueChange: onValueChange,
+  //           onDateChange: onDateChange,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
