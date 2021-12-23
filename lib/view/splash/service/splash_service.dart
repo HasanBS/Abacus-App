@@ -8,14 +8,14 @@ class SplashService {
   static SplashService? _instance;
 
   static SplashService get instance {
-    if (_instance != null) return _instance!;
-    _instance = SplashService._init();
-    return _instance!;
+    return _instance ??= SplashService._init();
   }
 
-  SplashService._init();
+  SplashService._init() {
+    _serviceInit();
+  }
 
-  Future<void> serviceInit() async {
+  Future<void> _serviceInit() async {
     WidgetsFlutterBinding.ensureInitialized();
     await CounterDatabaseProvider.instance.initDB();
     await CountdownDatabaseProvider.instance.initDB();

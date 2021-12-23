@@ -2,9 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-// import 'widget/sized-box/space_sized_height_box.dart';
-// import 'widget/sized-box/space_sized_width_box.dart';
-
 extension ContextExtension on BuildContext {
   MediaQueryData get mediaQuery => MediaQuery.of(this);
 
@@ -41,6 +38,11 @@ extension MediaQueryExtension on BuildContext {
 
   double dynamicWidth(double val) => width * val;
   double dynamicHeight(double val) => height * val;
+
+  double bodyHeight(AppBar appBar) => height - appBar.preferredSize.height - mediaQuery.padding.top;
+
+  double object6Height(AppBar appBar) =>
+      (height - appBar.preferredSize.height - mediaQuery.padding.top) / 6;
 }
 
 extension DurationExtension on BuildContext {

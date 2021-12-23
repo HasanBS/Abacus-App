@@ -17,7 +17,7 @@ extension DurationUnits on Duration {
 
 extension DateTimeExtension on DateTime {
   String get stringDate =>
-      '${hour.timeString}:${minute.timeString}:${second.timeString}   ${day.timeString}.${month.timeString}.$year';
+      '${hour.timeString}:${minute.timeString}   ${day.timeString}.${month.timeString}.$year';
 }
 
 extension DurationModelExtension on DurationModel {
@@ -76,12 +76,3 @@ extension DurationModelExtension on DurationModel {
     return [firstPartOfDate, secondPartOfDate];
   }
 }
-
-// extension PastDurationUnits on Duration {
-//   int get pastDays => -inDays;
-//   int get pastHours => -inHours % Duration.hoursPerDay;
-//   int get pastMinutes => -inMinutes % Duration.minutesPerHour;
-//   int get pastSeconds => -inSeconds % Duration.secondsPerMinute;
-//   int get pastMilliseconds => -inMilliseconds % Duration.millisecondsPerSecond;
-//   int get pastMicroseconds => -inMicroseconds % Duration.microsecondsPerMillisecond;
-// }

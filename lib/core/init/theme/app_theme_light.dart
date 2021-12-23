@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../constants/app/app_constants.dart';
 import 'iapp_theme.dart';
@@ -15,15 +14,14 @@ class AppThemeLight extends IAppTheme with ILightTheme {
 
   @override
   ThemeData get theme => ThemeData(
-        //primarySwatch: MaterialColor(_appColorScheme.secondaryMap<int, Color> swatch),
         primaryTextTheme: textThemes,
         elevatedButtonTheme: elevatedButtonTheme,
-        textSelectionTheme: textSelectionTheme, //Done
-        snackBarTheme: snackBarTheme, //Done
-        indicatorColor: _appColorScheme.secondary, //XXXXXX
+        textSelectionTheme: textSelectionTheme,
+        snackBarTheme: snackBarTheme,
+        indicatorColor: _appColorScheme.secondary,
         fontFamily: AppConstants.FONT_FAMILY,
-        colorScheme: _appColorScheme, //XXXXXX
-        textTheme: textThemes, //XXXXXX
+        colorScheme: _appColorScheme,
+        textTheme: textThemes,
         appBarTheme: appBarTheme,
         inputDecorationTheme: inputDecorationTheme,
         scaffoldBackgroundColor: _appColorScheme.primary,
@@ -53,7 +51,6 @@ class AppThemeLight extends IAppTheme with ILightTheme {
 
   SnackBarThemeData get snackBarTheme {
     return SnackBarThemeData(
-      //XXXXXX
       contentTextStyle: textTheme!.bodyText1.copyWith(color: _appColorScheme.primary),
       backgroundColor: _appColorScheme.secondary,
     );
@@ -93,16 +90,9 @@ class AppThemeLight extends IAppTheme with ILightTheme {
 
   AppBarTheme get appBarTheme {
     return ThemeData.light().appBarTheme.copyWith(
-          //XXXXXX
           brightness: Brightness.light,
           color: _appColorScheme.primary,
-          //foregroundColor: _appColorScheme.secondary,
           elevation: 0,
-
-          // iconTheme: IconThemeData(
-          //   color: _appColorScheme.secondary,
-          //   size: 21,
-          // ),
         );
   }
 
@@ -130,7 +120,6 @@ class AppThemeLight extends IAppTheme with ILightTheme {
   ButtonThemeData get buttonTheme {
     return ThemeData.light().buttonTheme.copyWith(
           colorScheme: const ColorScheme.light(
-            //?
             onError: Color(0xffFF2D55),
           ),
         );
@@ -138,11 +127,10 @@ class AppThemeLight extends IAppTheme with ILightTheme {
 
   TabBarTheme get tabBarTheme {
     return TabBarTheme(
-      labelColor: _appColorScheme.secondary, //Choosen Label Color
+      labelColor: _appColorScheme.secondary,
       labelStyle: textTheme!.headline5,
       unselectedLabelStyle: textTheme!.headline6,
       unselectedLabelColor: _appColorScheme.secondary.withOpacity(0.2),
-      // unselectedLabelStyle: textTheme.headline4.copyWith(color: colorSchemeLight.red),
     );
   }
 }

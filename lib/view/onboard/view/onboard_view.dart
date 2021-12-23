@@ -10,41 +10,54 @@ import '../../../core/init/navigation/navigation_service.dart';
 import '../cubit/onboard_cubit.dart';
 import '../model/onboard_model.dart';
 
-class OnBoardView extends StatelessWidget {
-  const OnBoardView({Key? key}) : super(key: key);
+class OnBoardPage extends StatelessWidget {
+  const OnBoardPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => OnboardCubit(),
-      child: Scaffold(
-        body: Padding(
-          padding: context.horizontalPaddingMedium,
-          child: Column(
-            children: [
-              const Spacer(),
-              Expanded(
-                  flex: 5,
-                  child: BlocBuilder<OnboardCubit, OnboardState>(
-                    builder: (context, state) {
-                      if (state is OnboardLoad) {
-                        return PageView.builder(
-                          itemCount: state.onBoardItems.length,
-                          onPageChanged: (value) {
-                            context.read<OnboardCubit>().changeCurrentIndex(value);
-                          },
-                          itemBuilder: (context, index) =>
-                              _buildColumnBody(state.onBoardItems[index], context),
-                        );
-                      }
-                      return Container();
-                    },
-                  )),
-              Expanded(flex: 2, child: _buildRowFooter(context)),
-            ],
-          ),
+      child: const OnBoardView(),
+    );
+  }
+}
+
+class OnBoardView extends StatelessWidget {
+  const OnBoardView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: context.horizontalPaddingMedium,
+        child: Column(
+          children: [
+            const Spacer(),
+            Expanded(
+              flex: 5,
+              child: _buildCards(),
+            ),
+            Expanded(flex: 2, child: _buildRowFooter(context)),
+          ],
         ),
       ),
+    );
+  }
+
+  BlocBuilder<OnboardCubit, OnboardState> _buildCards() {
+    return BlocBuilder<OnboardCubit, OnboardState>(
+      builder: (context, state) {
+        if (state is OnboardLoad) {
+          return PageView.builder(
+            itemCount: state.onBoardItems.length,
+            onPageChanged: (value) {
+              context.read<OnboardCubit>().changeCurrentIndex(value);
+            },
+            itemBuilder: (context, index) => _buildColumnBody(state.onBoardItems[index], context),
+          );
+        }
+        return Container();
+      },
     );
   }
 
@@ -114,10 +127,9 @@ class OnBoardView extends StatelessWidget {
 
   Material _buildFloatingActionButtonSkip(BuildContext context) {
     return Material(
-      type: MaterialType.transparency, //Makes it usable on any background color
+      type: MaterialType.transparency,
       child: InkWell(
-        //This keeps the splash effect within the circle
-        borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
+        borderRadius: BorderRadius.circular(1000.0),
         onTap: () {
           NavigationService.instance.navigateToPageClear(path: NavigationConstants.HOME);
         },

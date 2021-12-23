@@ -1,44 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../product/widget/buttonfields/counter_button.dart';
-
 import '../../../../core/components/card/error_widget.dart';
-import '../../../../core/extension/context_extension.dart';
 import '../cubit/counter_cubit.dart';
 import '../model/counter_model.dart';
 
-class CounterView extends StatefulWidget {
-  const CounterView({Key? key}) : super(key: key);
+class CounterPage extends StatelessWidget {
+  const CounterPage({Key? key}) : super(key: key);
 
-  @override
-  _CounterViewState createState() => _CounterViewState();
-}
-
-class _CounterViewState extends State<CounterView> {
   @override
   Widget build(BuildContext context) {
-    List<CounterModel?> counterList = [];
     return BlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
         if (state is CounterListLoadSuccess) {
-          counterList = state.counterList;
+          return CounterView(counterList: state.counterList);
         } else if (state is CounterLoadInProgress) {
-          const CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (state is CounterLoadFailure) {
-          ErrorCard(error: 'CounterLoadFailure  => ${state.e}');
+          return ErrorCard(error: 'CounterLoadFailure  => ${state.e}');
         }
-        return ListView(
-          children: [
-            context.emptySizedHeightBoxLow,
-            for (var i = 0; i < counterList.length; i++)
-              CounterField(
-                model: counterList[i]!,
-              ),
-            context.emptySizedHeightBoxHigh,
-            context.emptySizedHeightBoxHigh,
-          ],
-        );
+        return Container();
       },
     );
+  }
+}
+
+class CounterView extends StatelessWidget {
+  final List<CounterModel> counterList;
+  const CounterView({Key? key, required this.counterList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: counterList.length,
+        itemBuilder: (context, index) {
+          return CounterField(
+            model: counterList[index],
+          );
+        });
   }
 }

@@ -1,8 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../product/widget/divider/custom_divider.dart';
 
 import '../../../view/home/todo/cubit/todo_cubit.dart';
@@ -39,27 +40,31 @@ class _TodoFieldState extends State<TodoField> {
 
   @override
   Widget build(BuildContext context) {
-    return ZoomIn(
-      controller: (controller) => _animationControllerDelete = controller,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Visibility(
-                visible: _deleteVisibility,
-                child: deleteButton,
-              ),
-              Expanded(child: _markButton),
-            ],
-          ),
-          CustomDivider(context),
-        ],
+    return SizedBox(
+      height: 74.h,
+      child: ZoomIn(
+        controller: (controller) => _animationControllerDelete = controller,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Visibility(
+                  visible: _deleteVisibility,
+                  child: _deleteButton,
+                ),
+                Expanded(child: _markButton),
+              ],
+            ),
+            CustomDivider(context),
+          ],
+        ),
       ),
     );
   }
 
-  Widget get deleteButton {
+  Widget get _deleteButton {
     return IconButton(
       onPressed: () async {
         await _animationControllerDelete.animateTo(0).whenComplete(() {
@@ -97,7 +102,6 @@ class _TodoFieldState extends State<TodoField> {
               );
         },
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.only(left: context.mediumValueW),
           side: BorderSide.none,
           primary: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -106,11 +110,10 @@ class _TodoFieldState extends State<TodoField> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              flex: 8,
+              flex: 9,
               child: _titleText,
             ),
             Flexible(
-              flex: 2,
               child: _animatedIcon,
             ),
           ],

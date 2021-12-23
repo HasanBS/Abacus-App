@@ -5,7 +5,6 @@ import '../../../../../core/constants/image/image_constatns.dart';
 import '../../../../../core/extension/context_extension.dart';
 import '../../../../../product/widget/button/counter_button.dart';
 import '../../cubit/counter_cubit.dart';
-import '../../model/counter_action_model.dart';
 import '../../model/counter_model.dart';
 
 class BottomButtons extends StatelessWidget {
@@ -19,7 +18,7 @@ class BottomButtons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Flexible(child: decreaseButtton(context)),
+          Flexible(child: _decreaseButtton(context)),
           SizedBox(
             height: context.dynamicHeight(0.2),
             child: VerticalDivider(
@@ -28,42 +27,30 @@ class BottomButtons extends StatelessWidget {
               width: 0,
             ),
           ),
-          Flexible(child: increaseButton(context)),
+          Flexible(child: _increaseButton(context)),
         ],
       ),
     );
   }
 
-  ElevatedButton decreaseButtton(BuildContext context) {
+  ElevatedButton _decreaseButtton(BuildContext context) {
     return CounterButton(
       context: context,
       iconData: ImageConstants.instance.minusIcon,
       onPressed: () {
         model.counterTotal -= model.counterRatio;
-        context.read<CounterCubit>().insertActionUpdateModel(
-            CounterActionModel(
-                counterId: model.id!,
-                isPositive: 0,
-                actionTotal: model.counterTotal,
-                actionAmount: model.counterRatio),
-            model);
+        context.read<CounterCubit>().updateCounter(model);
       },
     );
   }
 
-  ElevatedButton increaseButton(BuildContext context) {
+  ElevatedButton _increaseButton(BuildContext context) {
     return CounterButton(
       context: context,
       iconData: ImageConstants.instance.plusIcon,
       onPressed: () {
         model.counterTotal += model.counterRatio;
-        context.read<CounterCubit>().insertActionUpdateModel(
-            CounterActionModel(
-                counterId: model.id!,
-                isPositive: 1,
-                actionTotal: model.counterTotal,
-                actionAmount: model.counterRatio),
-            model);
+        context.read<CounterCubit>().updateCounter(model);
       },
     );
   }

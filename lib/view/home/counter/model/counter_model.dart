@@ -6,7 +6,6 @@ part 'counter_model.g.dart';
 
 @JsonSerializable()
 class CounterModel extends IDatabaseModel<CounterModel> {
-  //extends DatabaseModel <Counter>
   int? id;
   late String title;
   String? description;

@@ -8,7 +8,7 @@ abstract class CountdownState {
 class CountdownLoadInProgress extends CountdownState {}
 
 class CountdownListLoadSuccess extends CountdownState {
-  final List<CountdownModel?> countdownList;
+  final List<CountdownModel> countdownList;
   const CountdownListLoadSuccess(this.countdownList);
 }
 

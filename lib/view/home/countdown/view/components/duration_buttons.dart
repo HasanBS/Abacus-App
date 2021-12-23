@@ -13,7 +13,6 @@ import '../../../../../product/widget/bottomPicker/time_picker.dart';
 import '../../model/countdown_model.dart';
 import '../../model/duration_model.dart';
 import 'countdown_calculator.dart';
-import 'package:sizer/sizer.dart';
 
 class DurationButtons extends StatefulWidget {
   final CountdownModel model;
@@ -72,35 +71,17 @@ class _DurationButtonsState extends State<DurationButtons> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 25.h,
-      child: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 5.h,
-            child: isPastText(context),
-          ),
-          SizedBox(
-            height: 10.h,
-            child: FittedBox(
-              fit: BoxFit.fitHeight,
-              child: _dateButton(context),
-            ),
-          ),
-          SizedBox(
-            height: 10.h,
-            child: FittedBox(
-              fit: BoxFit.fitHeight,
-              child: _timeButton(context),
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Flexible(child: _isPastText(context)),
+        Flexible(flex: 3, child: _dateButton(context)),
+        Flexible(flex: 3, child: _timeButton(context)),
+      ],
     );
   }
 
-  Widget isPastText(BuildContext context) {
+  Widget _isPastText(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -109,9 +90,7 @@ class _DurationButtonsState extends State<DurationButtons> {
             ImageConstants.instance.leftChevron,
             color: context.colorScheme.secondary,
             size: 25,
-          )
-        else
-          Container(),
+          ),
         AutoSizeText(
           _dateDuration.isPast
               ? LocaleKeys.countdown_page_since.locale
@@ -124,8 +103,6 @@ class _DurationButtonsState extends State<DurationButtons> {
             color: context.colorScheme.secondary,
             size: 25,
           )
-        else
-          Container(),
       ],
     );
   }
@@ -166,7 +143,6 @@ class _DurationButtonsState extends State<DurationButtons> {
               : LocaleKeys.countdown_page_day.tr(args: [duration.day.toString()])),
       style: context.textTheme.headline1,
       maxLines: 1,
-      group: autoSizeGroup,
     );
   }
 
@@ -201,7 +177,6 @@ class _DurationButtonsState extends State<DurationButtons> {
           LocaleKeys.countdown_page_second.tr(args: [duration.second.toString()]),
       style: context.textTheme.headline1,
       maxLines: 1,
-      group: autoSizeGroup,
     );
   }
 

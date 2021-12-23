@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../../../../core/extension/duration_extension.dart';
 import '../model/notification_model.dart';
 import '../service/notification_service.dart';
 
@@ -49,14 +48,14 @@ class NotificationCubit extends Cubit<NotificationState> {
         insertId = 0;
       }
 
-      final notiModel = NotificationModel(reminderDate.stringDate,
+      final notiModel = NotificationModel(reminderDate.toString(),
           id: insertId,
           countdownId: countdownId,
           title: title,
           body: body,
           scheduledDate: reminderDate);
       final newNotification = PendingNotificationRequest(
-          int.parse("$countdownId$insertId"), title, body, reminderDate.stringDate);
+          int.parse("$countdownId$insertId"), title, body, reminderDate.toString());
       final notiList = (state as NotificationLoadSucces).notificationList;
       notiList.add(newNotification);
 
@@ -67,9 +66,9 @@ class NotificationCubit extends Cubit<NotificationState> {
 
   Future<void> updateNotification(int id, String title, String body, DateTime scheduledDate) async {
     _notificationProvider.updateNotification(
-        id, title, body, scheduledDate, scheduledDate.stringDate);
+        id, title, body, scheduledDate, scheduledDate.toString());
     final notiList = (state as NotificationLoadSucces).notificationList;
-    final newNotification = PendingNotificationRequest(id, title, body, scheduledDate.stringDate);
+    final newNotification = PendingNotificationRequest(id, title, body, scheduledDate.toString());
     notiList.removeWhere((element) => element!.id == id);
     notiList.add(newNotification);
     emit(NotificationLoadSucces(notiList));
@@ -80,5 +79,21 @@ class NotificationCubit extends Cubit<NotificationState> {
     final notiList = (state as NotificationLoadSucces).notificationList;
     notiList.removeWhere((element) => element!.id == id);
     emit(NotificationLoadSucces(notiList));
+  }
+
+  Future<void> cancelOldNotification(DateTime dateTime) async {
+    if (state is NotificationLoadSucces) {
+      for (var i = 0; i < (state as NotificationLoadSucces).notificationList.length; i++) {
+        final request = (state as NotificationLoadSucces).notificationList[i]!;
+        if (DateTime.parse(request.payload!).isAfter(dateTime)) {
+          _notificationProvider.cancelNotification(request.id);
+        }
+      }
+    }
+  }
+
+  bool isAfter(DateTime goalDate) {
+    cancelOldNotification(goalDate);
+    return goalDate.isAfter(DateTime.now());
   }
 }

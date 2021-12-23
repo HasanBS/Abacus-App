@@ -22,7 +22,7 @@ class CounterPageView extends StatefulWidget {
 
 class _CounterPageViewState extends State<CounterPageView> {
   bool isChange = false;
-  // ignore: prefer_function_declarations_over_variables
+
   ValueChanged<bool> onValueChange = (value) {
     value = false;
   };
@@ -67,13 +67,13 @@ class _CounterPageViewState extends State<CounterPageView> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: appBar(context),
-        body: body(context),
+        appBar: _appBar(context),
+        body: _body(context),
       ),
     );
   }
 
-  AppBar appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return EditAppBar(
       context: context,
       title: widget.model.title,
@@ -99,26 +99,32 @@ class _CounterPageViewState extends State<CounterPageView> {
             counterTotal: double.tryParse(_countTotalController.text) ?? 0,
             counterRatio: ratio,
           );
-          context.read<CounterCubit>().updateCounter(updateModel.id!, updateModel);
+          context.read<CounterCubit>().updateCounter(updateModel);
         });
       },
     );
   }
 
-  Column body(BuildContext context) {
+  Column _body(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CounterForms(
+        Flexible(
+          flex: 7,
+          child: CounterForms(
+              model: widget.model,
+              onValueChange: onValueChange,
+              onEdit: onEdit,
+              titleController: _titleController,
+              descriptionController: _descriptionController,
+              countTotalController: _countTotalController,
+              countRatioController: _countRatioController),
+        ),
+        Flexible(
+          flex: 2,
+          child: BottomButtons(
             model: widget.model,
-            onValueChange: onValueChange,
-            onEdit: onEdit,
-            titleController: _titleController,
-            descriptionController: _descriptionController,
-            countTotalController: _countTotalController,
-            countRatioController: _countRatioController),
-        BottomButtons(
-          model: widget.model,
+          ),
         ),
       ],
     );
@@ -147,7 +153,7 @@ class _CounterPageViewState extends State<CounterPageView> {
         context.navigation.pop();
         context.navigation.pop();
 
-        await context.read<CounterCubit>().updateCounter(updateModel.id!, updateModel);
+        await context.read<CounterCubit>().updateCounter(updateModel);
       },
       onCancelBtnTap: () async {
         context.navigation.pop();

@@ -14,13 +14,13 @@ void main() {
   group('Countdown Cubit Get Operations Test', () {
     blocTest(
       'get Countdown List',
-      build: () => CountdownCubit()..getCountdownList(),
+      build: () => CountdownCubit(CountdownDatabaseProvider.instance)..getCountdownList(),
       expect: () => [isA<CountdownListLoadSuccess>()],
     );
 
     blocTest(
       'get choosen Countdown',
-      build: () => CountdownCubit()..getCountdown(1),
+      build: () => CountdownCubit(CountdownDatabaseProvider.instance)..getCountdown(1),
       expect: () => [isA<CountdownLoadSuccess>()],
     );
   });
@@ -29,19 +29,14 @@ void main() {
     final CountdownModel countdownModel = CountdownModel(title: "test", goalDate: "2023");
     blocTest(
       'insert CountdownModel',
-      build: () => CountdownCubit()..insertCountdown(countdownModel),
+      build: () =>
+          CountdownCubit(CountdownDatabaseProvider.instance)..insertCountdown(countdownModel),
       expect: () => [isA<CountdownListLoadSuccess>()],
     );
 
-    // blocTest(
-    //   'update CountdownModel ',
-    //   build: () => CountdownCubit()..updateCountdown(id, model),
-    //   expect: () => [isA<CountdownListLoadSuccess>()],
-    // );
-
     blocTest(
       'remove CountdownModel ',
-      build: () => CountdownCubit()..removeCountdown(1),
+      build: () => CountdownCubit(CountdownDatabaseProvider.instance)..removeCountdown(1),
       expect: () => [isA<CountdownListLoadSuccess>()],
     );
   });

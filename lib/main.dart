@@ -1,11 +1,13 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:memo_notes/view/home/countdown/provider/countdown_database_provider.dart';
+import 'package:memo_notes/view/home/counter/provider/counter_database_provider.dart';
+import 'package:memo_notes/view/home/todo/provider/todo_database_provider.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sizer/sizer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/constants/app/app_constants.dart';
 import 'core/constants/navigation/navigation_constants.dart';
@@ -22,7 +24,6 @@ import 'view/home/counter/cubit/counter_cubit.dart';
 import 'view/home/todo/cubit/todo_cubit.dart';
 
 Future<void> main() async {
-  //await _init();
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
@@ -35,50 +36,40 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]).then((_) {
     runApp(MultiBlocProvider(
-      providers: [
-        BlocProvider<ThemeCubit>(
-          create: (context) => ThemeCubit(),
-        ),
-        BlocProvider<CounterCubit>(
-          create: (BuildContext context) {
-            return CounterCubit()..getCounterList();
-          },
-        ),
-        BlocProvider<CountdownCubit>(
-          create: (BuildContext context) {
-            return CountdownCubit()..getCountdownList();
-          },
-        ),
-        BlocProvider<TodoCubit>(
-          create: (BuildContext context) {
-            return TodoCubit()..getTodoList();
-          },
-        ),
-      ],
-      // child: EasyLocalization(
-      //     supportedLocales: LanguageManager.instance.supportedLocales,
-      //     path: AppConstants.LANG_PATH,
-      //     child: MyApp())
-
-      child: DevicePreview(
-        builder: (context) {
-          return EasyLocalization(
-              supportedLocales: LanguageManager.instance.supportedLocales,
-              path: AppConstants.LANG_PATH,
-              child: MyApp());
-        }, // Wrap your app
-      ),
-    ));
+        providers: [
+          BlocProvider<ThemeCubit>(
+            create: (context) => ThemeCubit(),
+          ),
+          BlocProvider<CounterCubit>(
+            create: (BuildContext context) {
+              return CounterCubit(CounterDatabaseProvider.instance)..getCounterList();
+            },
+          ),
+          BlocProvider<CountdownCubit>(
+            create: (BuildContext context) {
+              return CountdownCubit(CountdownDatabaseProvider.instance)..getCountdownList();
+            },
+          ),
+          BlocProvider<TodoCubit>(
+            create: (BuildContext context) {
+              return TodoCubit(TodoDatabaseProvider.instance)..getTodoList();
+            },
+          ),
+        ],
+        child: EasyLocalization(
+            supportedLocales: LanguageManager.instance.supportedLocales,
+            path: AppConstants.LANG_PATH,
+            child: MyApp())));
   });
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  late ThemeMode themeMode;
   @override
   void initState() {
     super.initState();
@@ -106,20 +97,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder: (context, orientation, deviceType) {
-      return MaterialApp(
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        // locale: context.locale,
-        locale: DevicePreview.locale(context), // Add the locale here
-        builder: DevicePreview.appBuilder, // Add the builder here
-        debugShowCheckedModeBanner: false,
-        theme: AppThemeLight.instance.theme,
-        darkTheme: AppThemeDark.instance.theme,
-        themeMode: context.select((ThemeCubit themeCubit) => themeCubit.state.themeMode),
-        onGenerateRoute: NavigationRoute.instance.generateRoute,
-        navigatorKey: NavigationService.instance.navigatorKey,
-      );
-    });
+    themeMode = context.select((ThemeCubit themeCubit) => themeCubit.state.themeMode);
+    return ScreenUtilInit(
+        designSize: const Size(360, 780),
+        builder: () => MaterialApp(
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              debugShowCheckedModeBanner: false,
+              theme: AppThemeLight.instance.theme,
+              darkTheme: AppThemeDark.instance.theme,
+              themeMode: themeMode,
+              onGenerateRoute: NavigationRoute.instance.generateRoute,
+              navigatorKey: NavigationService.instance.navigatorKey,
+            ));
   }
 }

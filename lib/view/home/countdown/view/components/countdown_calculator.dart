@@ -11,7 +11,6 @@ class CountdownCalculator {
   }
 
   DurationModel _durationCalulation(DateTime fromDate) {
-    // Check if toDate to be included in the calculation
     DateTime endDate;
     DateTime startDate;
 
@@ -33,7 +32,6 @@ class CountdownCalculator {
       startDate = DateTime.now();
     }
 
-    //Clock set
     final tempStart = DateTime(1, 1, 1, startDate.hour, startDate.minute, startDate.second);
     final tempEnd = DateTime(1, 1, 1, endDate.hour, endDate.minute, endDate.second);
     final timeDifference = tempEnd.difference(tempStart);
@@ -52,7 +50,6 @@ class CountdownCalculator {
       seconds = timeDifference.seconds;
     }
 
-    //date sett
     years = endDate.year - startDate.year;
 
     if (startDate.month > endDate.month) {

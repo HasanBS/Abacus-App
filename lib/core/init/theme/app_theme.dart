@@ -14,7 +14,7 @@ class AppTheme extends IAppTheme {
   AppTheme._init();
 
   static Brightness get currentSystemBrightness =>
-      SchedulerBinding.instance!.window.platformBrightness; //!
+      SchedulerBinding.instance!.window.platformBrightness;
 
   static dynamic setStatusBarAndNavigationBarColors(ThemeMode themeMode) {
     const Color darkColor = Color(0xff313541);

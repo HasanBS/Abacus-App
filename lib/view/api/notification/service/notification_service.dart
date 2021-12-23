@@ -42,8 +42,8 @@ class NotificationService extends INotificationService {
       int id, String title, String body, DateTime scheduledDate, String payload) async {
     _notifications.zonedSchedule(
         id,
-        title, //
-        body, //
+        title,
+        body,
         tz.TZDateTime.from(scheduledDate, tz.local),
         const NotificationDetails(
           android: AndroidNotificationDetails(
@@ -68,9 +68,7 @@ class NotificationService extends INotificationService {
   @override
   Future<void> init() async {
     final AndroidInitializationSettings android =
-        // ignore: prefer_const_constructors
         AndroidInitializationSettings('@drawable/ic_stat_notification');
-    // ignore: prefer_const_constructors
     final IOSInitializationSettings ios = IOSInitializationSettings();
     final InitializationSettings settings = InitializationSettings(android: android, iOS: ios);
 

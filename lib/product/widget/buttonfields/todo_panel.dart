@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/init/lang/locale_keys.g.dart';
 import '../../../core/extension/string_extension.dart';
 
@@ -23,17 +24,21 @@ class _TodoPanelState extends State<TodoPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(child: _deleteButton),
-            Expanded(child: _markButton),
-          ],
-        ),
-        CustomDivider(context),
-      ],
+    return SizedBox(
+      height: 74.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(child: _deleteButton),
+              Expanded(child: _markButton),
+            ],
+          ),
+          CustomDivider(context),
+        ],
+      ),
     );
   }
 
@@ -44,19 +49,17 @@ class _TodoPanelState extends State<TodoPanel> {
         context.read<TodoCubit>().checkDoneAllTodos();
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.only(left: context.mediumValueW),
         side: BorderSide.none,
         primary: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Flexible(
+          Expanded(
             flex: 4,
             child: _markText,
           ),
-          Flexible(
+          Expanded(
             child: Pulse(
               controller: (controller) => _animationControllerMark = controller,
               manualTrigger: true,
@@ -79,7 +82,6 @@ class _TodoPanelState extends State<TodoPanel> {
         context.read<TodoCubit>().removeDoneTodos();
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.only(left: context.mediumValueW),
         side: BorderSide.none,
         primary: Colors.transparent,
         shadowColor: Colors.transparent,

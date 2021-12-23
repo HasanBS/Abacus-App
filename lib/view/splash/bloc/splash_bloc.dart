@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:memo_notes/core/constants/app/app_constants.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/constants/navigation/navigation_constants.dart';
@@ -13,23 +13,29 @@ part 'splash_event.dart';
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> with HydratedMixin {
-  SplashBloc() : super(SplashState.initial());
+  SplashService service;
+  SplashBloc(
+    this.service,
+  ) : super(SplashState.initial());
 
   @override
   Stream<SplashState> mapEventToState(
     SplashEvent event,
   ) async* {
     if (event is NavigateToHomeScreenEvent) {
-      SplashService.instance.serviceInit();
       if (!state.isFirstApp) {
         yield state.copyWith(isFirstApp: true);
-        await Future.delayed(const Duration(milliseconds: 1250));
+        await _splashDuration();
         await NavigationService.instance.navigateToPageClear(path: NavigationConstants.ONBOARDPAGE);
-      } else {
-        await Future.delayed(const Duration(milliseconds: 1250));
-        await NavigationService.instance.navigateToPageClear(path: NavigationConstants.HOME);
+        return;
       }
+      await _splashDuration();
+      await NavigationService.instance.navigateToPageClear(path: NavigationConstants.HOME);
     }
+  }
+
+  Future<void> _splashDuration() async {
+    await Future.delayed(const Duration(milliseconds: AppConstants.SPLASH_ANIMATION_DURATION));
   }
 
   @override

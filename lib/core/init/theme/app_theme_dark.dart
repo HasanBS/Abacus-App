@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../constants/app/app_constants.dart';
 import 'dark/dark_theme_interface.dart';
@@ -16,12 +15,12 @@ class AppThemeDark extends IAppTheme with IDarkTheme {
   @override
   ThemeData get theme => ThemeData(
         elevatedButtonTheme: elevatedButtonTheme,
-        textSelectionTheme: textSelectionTheme, //Done
-        snackBarTheme: snackBarTheme, //Done
-        indicatorColor: _appColorScheme.secondary, //XXXXXX
+        textSelectionTheme: textSelectionTheme,
+        snackBarTheme: snackBarTheme,
+        indicatorColor: _appColorScheme.secondary,
         fontFamily: AppConstants.FONT_FAMILY,
-        colorScheme: _appColorScheme, //XXXXXX
-        textTheme: textThemes, //XXXXXX
+        colorScheme: _appColorScheme,
+        textTheme: textThemes,
         appBarTheme: appBarTheme,
         inputDecorationTheme: inputDecorationTheme,
         scaffoldBackgroundColor: _appColorScheme.primary,
@@ -51,7 +50,6 @@ class AppThemeDark extends IAppTheme with IDarkTheme {
 
   SnackBarThemeData get snackBarTheme {
     return SnackBarThemeData(
-      //XXXXXX
       contentTextStyle: textTheme!.bodyText1.copyWith(color: _appColorScheme.primary),
       backgroundColor: _appColorScheme.secondary,
     );
@@ -91,15 +89,9 @@ class AppThemeDark extends IAppTheme with IDarkTheme {
 
   AppBarTheme get appBarTheme {
     return ThemeData.dark().appBarTheme.copyWith(
-          //XXXXXX
           brightness: Brightness.dark,
           color: _appColorScheme.primary,
           elevation: 0,
-
-          // iconTheme: IconThemeData(
-          //   color: _appColorScheme.secondary,
-          //   size: 21,
-          // ),
         );
   }
 
@@ -127,7 +119,6 @@ class AppThemeDark extends IAppTheme with IDarkTheme {
   ButtonThemeData get buttonTheme {
     return ThemeData.dark().buttonTheme.copyWith(
           colorScheme: const ColorScheme.dark(
-            //?
             onError: Color(0xffFF2D55),
           ),
         );
@@ -135,11 +126,10 @@ class AppThemeDark extends IAppTheme with IDarkTheme {
 
   TabBarTheme get tabBarTheme {
     return TabBarTheme(
-      labelColor: _appColorScheme.secondary, //Choosen Label Color
+      labelColor: _appColorScheme.secondary,
       labelStyle: textTheme!.headline5,
       unselectedLabelStyle: textTheme!.headline6,
       unselectedLabelColor: _appColorScheme.secondary.withOpacity(0.2),
-      // unselectedLabelStyle: textTheme.headline4.copyWith(color: colorSchemeLight.red),
     );
   }
 }

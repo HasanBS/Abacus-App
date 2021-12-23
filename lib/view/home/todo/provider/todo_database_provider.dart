@@ -27,7 +27,6 @@ class TodoDatabaseProvider implements DatabaseManager<TodoModel> {
   static const _columnIsDone = "isDone"; //0 means false (-) 1 means true (+)
   static const _columnDoneDate = "doneDate";
 
-// DEFAULT CURRENT_TIMESTAMP
   static const _todoTable = """
  CREATE TABLE $_todoTableName(
         $_columnId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +40,6 @@ class TodoDatabaseProvider implements DatabaseManager<TodoModel> {
   @override
   Future<void> initDB() async {
     final path = join(await getDatabasesPath(), _dbName);
-    //await deleteDatabase(path);
 
     database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(_todoTable);
@@ -65,7 +63,7 @@ class TodoDatabaseProvider implements DatabaseManager<TodoModel> {
   }
 
   @override
-  Future<List<TodoModel?>> getList() async {
+  Future<List<TodoModel>> getList() async {
     final todoItemListMaps = await database.query(_todoTableName);
     return todoItemListMaps.map((e) => TodoModel.fromJson(e)).toList();
   }

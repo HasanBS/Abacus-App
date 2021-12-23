@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:memo_notes/product/widget/tab/appbar_tabs.dart';
 import '../../../product/widget/popup/countdown_popup.dart';
 import '../../../product/widget/popup/counter_popup.dart';
 import '../../../product/widget/popup/todo_popup_view.dart';
@@ -23,42 +23,20 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin {
   DateTime? currentBackPressTime;
-  List<Tab> tabs = <Tab>[
-    const Tab(
-      child: AutoLocaleText(
-        value: LocaleKeys.counter_homeScreenTitle,
-      ),
-    ),
-    const Tab(
-      child: AutoLocaleText(
-        value: LocaleKeys.countdown_homeScreenTitle,
-      ),
-    ),
-    const Tab(
-      child: AutoLocaleText(
-        value: LocaleKeys.todo_todoTitle,
-      ),
-    ),
-  ];
-
+  late List<Widget> tabs;
   late TabController _tabController;
   int _currentIndex = 0;
 
   @override
   void initState() {
+    tabs = AppbarTabs().tabs;
     _tabController = TabController(vsync: this, length: tabs.length);
     _tabController.animation!.addListener(() {
       setState(() {
-        _currentIndex = (_tabController.animation!.value)
-            .round(); //_tabController.animation.value returns double
+        _currentIndex = (_tabController.animation!.value).round();
       });
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -66,14 +44,14 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: WillPopScope(
-        onWillPop: onWillPop,
+        onWillPop: _onWillPop,
         child: tabController,
       ),
-      floatingActionButton: floatingActionButton,
+      floatingActionButton: _floatingActionButton,
     );
   }
 
-  Future<bool> onWillPop() {
+  Future<bool> _onWillPop() {
     final now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) >
@@ -93,39 +71,39 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
 
   DefaultTabController get tabController {
     return DefaultTabController(
-      length: 3,
+      length: tabs.length,
       child: Scaffold(
         backgroundColor: context.colorScheme.primary,
         appBar: AppBar(
           centerTitle: true,
           title: TabBar(
-            labelPadding: context.horizontalPaddingMedium,
+            labelPadding: context.horizontalPaddingLow,
             controller: _tabController,
-            isScrollable: true,
             tabs: tabs,
           ),
         ),
         body: Container(
           color: context.colorScheme.primary,
-          child: TabBarView(
-            controller: _tabController,
-            children: const [
-              CounterView(),
-              CountdownView(),
-              TodoView(),
-            ],
+          child: Center(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                CounterPage(),
+                CountdownPage(),
+                TodoPage(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Material get floatingActionButton {
+  Material get _floatingActionButton {
     return Material(
-      type: MaterialType.transparency, //Makes it usable on any background color
+      type: MaterialType.transparency,
       child: InkWell(
-        //This keeps the splash effect within the circle
-        borderRadius: BorderRadius.circular(1000.0), //Something large to ensure a circle
+        borderRadius: BorderRadius.circular(1000.0),
         onTap: () {
           Navigator.of(context).push(HeroDialogRoute(builder: (_) {
             switch (_currentIndex) {

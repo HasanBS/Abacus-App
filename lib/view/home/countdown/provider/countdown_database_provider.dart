@@ -8,9 +8,7 @@ class CountdownDatabaseProvider implements DatabaseManager<CountdownModel> {
   static CountdownDatabaseProvider? _instance;
 
   static CountdownDatabaseProvider get instance {
-    if (_instance != null) return _instance!;
-    _instance = CountdownDatabaseProvider._init();
-    return _instance!;
+    return _instance ??= CountdownDatabaseProvider._init();
   }
 
   @override
@@ -38,15 +36,13 @@ class CountdownDatabaseProvider implements DatabaseManager<CountdownModel> {
   @override
   Future<void> initDB() async {
     final path = join(await getDatabasesPath(), _dbName);
-    //await deleteDatabase(path);
-
     database = await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
       await db.execute(countdownTable);
     });
   }
 
   @override
-  Future<List<CountdownModel?>> getList() async {
+  Future<List<CountdownModel>> getList() async {
     final List<Map<String, dynamic>> countdownMaps = await database.query(_countdownTableName);
     return countdownMaps.map((e) => CountdownModel.fromJson(e)).toList();
   }

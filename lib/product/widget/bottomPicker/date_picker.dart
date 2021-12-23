@@ -15,9 +15,9 @@ class DateBottomPicker extends BottomPicker {
           onChange: onChange,
           onSubmit: onSubmit,
           initialDateTime: initialDateTime,
-          textStyle: context.textTheme.headline6!, //headline 6
-          backgroundColor: context.colorScheme.primary,
-          buttonColor: context.colorScheme.secondary,
+          // textStyle: context.textTheme.headline6!, //headline 6
+          // backgroundColor: context.colorScheme.primary,
+          // buttonColor: context.colorScheme.secondary,
           iconColor: context.colorScheme.primary,
           titleStyle: context.textTheme.headline6!,
           dismissable: true,

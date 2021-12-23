@@ -18,4 +18,8 @@ class AppConstants {
   static const RATIO_CARACTER_LIMIT = 10;
 
   static const DESCRIPTION_LINE_LIMIT = 3;
+  static const DESCRIPTION_LINE_MIN = 2;
+
+  static const COUNTER_ANIMATION_DURATION = 500;
+  static const SPLASH_ANIMATION_DURATION = 1250;
 }

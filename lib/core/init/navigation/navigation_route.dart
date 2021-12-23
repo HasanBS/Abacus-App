@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import '../../../view/home/countdown/model/countdown_model.dart';
 import '../../../view/home/countdown/view/countdown_page_view.dart';
 import '../../../view/home/counter/model/counter_model.dart';
@@ -20,7 +18,7 @@ class NavigationRoute {
   Route<dynamic> generateRoute(RouteSettings args) {
     switch (args.name) {
       case NavigationConstants.DEFAULT:
-        return normalNavigate(const SplashView());
+        return normalNavigate(const SplashPage());
 
       case NavigationConstants.HOME:
         return normalNavigate(const HomeView());
@@ -33,7 +31,7 @@ class NavigationRoute {
         return normalNavigate(CountdownPageView(model: args.arguments! as CountdownModel));
 
       case NavigationConstants.ONBOARDPAGE:
-        return normalNavigate(const OnBoardView());
+        return normalNavigate(const OnBoardPage());
       default:
         return MaterialPageRoute(
           builder: (context) => NotFoundNavigationWidget(),

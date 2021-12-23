@@ -1,3 +1,5 @@
 {
-    "dart.lineLength": 100
+    "dart.lineLength": 100,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs":"active"
 }

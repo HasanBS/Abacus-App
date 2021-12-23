@@ -1,9 +1,6 @@
 import 'dart:async';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../view/api/notification/service/notification_service.dart';
@@ -12,7 +9,7 @@ import '../../../product/widget/alertDialog/cool_alert_dialog.dart';
 import '../../../product/widget/divider/custom_divider.dart';
 import '../../../view/home/countdown/model/duration_model.dart';
 import '../../../view/home/countdown/view/components/countdown_calculator.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../view/home/countdown/cubit/countdown_cubit.dart';
 import '../../../view/home/countdown/model/countdown_model.dart';
 import '../../../core/constants/image/image_constatns.dart';
@@ -43,7 +40,6 @@ class _CountdownFieldState extends State<CountdownField> {
   late DurationModel _dateDuration;
   late Stream<DurationModel> _durationStream;
   late StreamSubscription _streamSubscription;
-  late AnimationController _animationControllerDelete;
 
   @override
   void initState() {
@@ -81,24 +77,27 @@ class _CountdownFieldState extends State<CountdownField> {
 
   @override
   Widget build(BuildContext context) {
-    return ZoomIn(
-      controller: (controller) => _animationControllerDelete = controller,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Visibility(
-                visible: deleteVisibility,
-                child: _deleteButton(context),
-              ),
-              Expanded(
-                child: _countdownButton,
-              ),
-            ],
-          ),
-          CustomDivider(context),
-        ],
+    return SizedBox(
+      height: 74.h,
+      child: ZoomIn(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Visibility(
+                  visible: deleteVisibility,
+                  child: _deleteButton(context),
+                ),
+                Expanded(
+                  child: _countdownButton,
+                ),
+              ],
+            ),
+            CustomDivider(context),
+          ],
+        ),
       ),
     );
   }
@@ -126,12 +125,9 @@ class _CountdownFieldState extends State<CountdownField> {
       lottieAssetLight: ImageConstants.instance.trashLight30Loti,
       onConfirmBtnTap: () async {
         context.pop();
-        await _animationControllerDelete.animateTo(0).whenComplete(() {
-          deleteVisibility = false;
-          context.read<CountdownCubit>().removeCountdown(widget.model.id!);
-        });
-        final _notificationProvider = NotificationService.instance;
-        await _notificationProvider.cancelAllNotification(widget.model.id!);
+        deleteVisibility = false;
+        context.read<CountdownCubit>().removeCountdown(widget.model.id!);
+        await NotificationService.instance.cancelAllNotification(widget.model.id!);
       },
       onCancelBtnTap: () => context.navigation.pop(),
     );

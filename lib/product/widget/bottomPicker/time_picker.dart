@@ -11,13 +11,15 @@ class TimeBottomPicker extends BottomPicker {
     Function(dynamic)? onChange,
     Function(dynamic)? onSubmit,
   }) : super.time(
+          buttonSingleColor: context.colorScheme.secondary,
+
           title: title,
           onChange: onChange,
           onSubmit: onSubmit,
           initialDateTime: initialDateTime,
-          textStyle: context.textTheme.headline6!,
-          backgroundColor: context.colorScheme.primary,
-          buttonColor: context.colorScheme.secondary,
+          // textStyle: context.textTheme.headline6!,
+          // backgroundColor: context.colorScheme.primary,
+          // buttonColor: context.colorScheme.secondary,
           iconColor: context.colorScheme.primary,
           titleStyle: context.textTheme.headline6!,
           dismissable: true,

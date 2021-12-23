@@ -71,7 +71,7 @@ class CounterPopup extends StatelessWidget {
         inputFormatters: [
           LengthLimitingTextInputFormatter(
             AppConstants.TITLE_CARACTER_LIMIT,
-          ), //Caracter limit for popup
+          ),
         ],
         decoration: InputDecoration(
           labelText: LocaleKeys.counter_formTitle.locale,

@@ -13,7 +13,7 @@ class TodoLoadSuccess extends TodoState {
 }
 
 class TodoListLoadSuccess extends TodoState {
-  final List<TodoModel?> todoList;
+  final List<TodoModel> todoList;
   const TodoListLoadSuccess(this.todoList);
 }
 

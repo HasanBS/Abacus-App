@@ -15,7 +15,6 @@ import '../../../../core/extension/string_extension.dart';
 import '../../../../core/init/lang/locale_keys.g.dart';
 import '../cubit/countdown_cubit.dart';
 import '../model/countdown_model.dart';
-import 'package:sizer/sizer.dart';
 
 class CountdownPageView extends StatefulWidget {
   final CountdownModel model;
@@ -36,7 +35,6 @@ class _CountdownPageViewState extends State<CountdownPageView> {
   bool isChange = false;
   bool onEdit = false;
 
-  // ignore: prefer_function_declarations_over_variables
   ValueChanged<bool> onValueChange = (value) {
     value = false;
   };
@@ -80,13 +78,13 @@ class _CountdownPageViewState extends State<CountdownPageView> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: appBar(context),
-        body: body(context),
+        appBar: _appBar(context),
+        body: _body(context),
       ),
     );
   }
 
-  AppBar appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return EditAppBar(
       context: context,
       title: widget.model.title,
@@ -107,39 +105,38 @@ class _CountdownPageViewState extends State<CountdownPageView> {
             description: _descriptionController.text,
             goalDate: _date.toString());
         widget.model.title = updatedModel.title;
-        await context.read<CountdownCubit>().updateCountdown(updatedModel.id!, updatedModel);
+        await context.read<CountdownCubit>().updateCountdown(updatedModel);
         setState(() {});
       },
     );
   }
 
-  Column body(BuildContext context) {
+  Column _body(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          children: [
-            SizedBox(
-              height: 10.h,
-              child: _titleForm,
-            ),
-            SizedBox(
-              height: 5.h,
-              child: _dateText,
-            ),
-            SizedBox(
-              height: 15.h,
-              child: _descriptionForm,
-            ),
-            if (_date.isAfter(DateTime.now()))
-              SizedBox(
-                height: 26.h,
-                child: NotificationView(model: widget.model),
-              ),
-          ],
+        if (onEdit) const Spacer(),
+        Flexible(
+          flex: 24,
+          child: Column(
+            children: [
+              if (_titleController.text.isNotEmpty || onEdit) Flexible(flex: 4, child: _titleForm),
+              Flexible(flex: 2, child: _dateText),
+              if (onEdit) const Spacer(),
+              if (_descriptionController.text.isNotEmpty || onEdit)
+                Flexible(flex: 8, child: _descriptionForm),
+              Expanded(
+                flex: 14,
+                child: NotificationPage(
+                  model: widget.model,
+                  goaldate: _date,
+                ),
+              )
+            ],
+          ),
         ),
-        SizedBox(
-          height: 26.h,
+        Flexible(
+          flex: 15,
           child: Padding(
             padding: EdgeInsets.only(top: context.lowValueH),
             child: DurationButtons(
@@ -155,25 +152,22 @@ class _CountdownPageViewState extends State<CountdownPageView> {
   }
 
   Widget get _titleForm {
-    return _titleController.text == "" && !onEdit
-        ? Container()
-        : Padding(
-            padding: EdgeInsets.only(left: context.mediumValueW, right: context.mediumValueW),
-            child: TextField(
-              onChanged: (_) {
-                isChange = true;
-              },
-              enabled: onEdit,
-              controller: _titleController,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(
-                    AppConstants.TITLE_CARACTER_LIMIT), //Caracter limit for popup
-              ],
-              decoration: InputDecoration(
-                labelText: LocaleKeys.counter_formTitle.locale,
-              ),
-            ),
-          );
+    return Padding(
+      padding: EdgeInsets.only(left: context.mediumValueW, right: context.mediumValueW),
+      child: TextField(
+        onChanged: (_) {
+          isChange = true;
+        },
+        enabled: onEdit,
+        controller: _titleController,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(AppConstants.TITLE_CARACTER_LIMIT),
+        ],
+        decoration: InputDecoration(
+          labelText: LocaleKeys.counter_formTitle.locale,
+        ),
+      ),
+    );
   }
 
   Container get _dateText {
@@ -182,29 +176,27 @@ class _CountdownPageViewState extends State<CountdownPageView> {
       alignment: Alignment.centerLeft,
       child: AutoSizeText(
         '${_date.day.timeString}.${_date.month.timeString}.${_date.year}',
-        style: context.textTheme.headline6, //headline6
+        style: context.textTheme.headline6,
       ),
     );
   }
 
   Widget get _descriptionForm {
-    return _descriptionController.text == '' && !onEdit
-        ? Container()
-        : Padding(
-            padding: EdgeInsets.only(left: context.mediumValueW, right: context.mediumValueW),
-            child: TextField(
-              onChanged: (_) {
-                isChange = true;
-              },
-              enabled: onEdit,
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: LocaleKeys.countdown_formDescription.locale,
-              ),
-              maxLines: AppConstants.DESCRIPTION_LINE_LIMIT,
-              minLines: 2,
-            ),
-          );
+    return Padding(
+      padding: EdgeInsets.only(left: context.mediumValueW, right: context.mediumValueW),
+      child: TextField(
+        onChanged: (_) {
+          isChange = true;
+        },
+        enabled: onEdit,
+        controller: _descriptionController,
+        decoration: InputDecoration(
+          labelText: LocaleKeys.countdown_formDescription.locale,
+        ),
+        maxLines: AppConstants.DESCRIPTION_LINE_LIMIT,
+        minLines: AppConstants.DESCRIPTION_LINE_MIN,
+      ),
+    );
   }
 
   dynamic _alertDialog(BuildContext context) {
@@ -224,7 +216,7 @@ class _CountdownPageViewState extends State<CountdownPageView> {
 
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        await context.read<CountdownCubit>().updateCountdown(updatedModel.id!, updatedModel);
+        await context.read<CountdownCubit>().updateCountdown(updatedModel);
       },
       onCancelBtnTap: () async {
         context.navigation.pop();
@@ -233,46 +225,3 @@ class _CountdownPageViewState extends State<CountdownPageView> {
     );
   }
 }
-
-
-  // Column body(BuildContext context) {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       Column(
-  //         children: [
-  //           Flexible(
-  //             flex: 0,
-  //             fit: FlexFit.tight,
-  //             child: _titleForm,
-  //           ),
-  //           Flexible(
-  //             fit: FlexFit.tight,
-  //             flex: 0,
-  //             child: _dateText,
-  //           ),
-  //           Flexible(
-  //             flex: 0,
-  //             fit: FlexFit.tight,
-  //             child: _descriptionForm,
-  //           ),
-  //           if (_date.isAfter(DateTime.now()))
-  //             Flexible(
-  //               flex: 0,
-  //               fit: FlexFit.tight,
-  //               child: NotificationView(model: widget.model),
-  //             ),
-  //         ],
-  //       ),
-  //       Padding(
-  //         padding: EdgeInsets.only(top: context.mediumValueH),
-  //         child: DurationButtons(
-  //           model: widget.model,
-  //           onEdit: onEdit,
-  //           onValueChange: onValueChange,
-  //           onDateChange: onDateChange,
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }

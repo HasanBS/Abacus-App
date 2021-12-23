@@ -76,8 +76,7 @@ class _CountdownPopupState extends State<CountdownPopup> {
       child: TextField(
         controller: _titleController,
         inputFormatters: [
-          LengthLimitingTextInputFormatter(
-              AppConstants.TITLE_CARACTER_LIMIT), //Caracter limit for popup
+          LengthLimitingTextInputFormatter(AppConstants.TITLE_CARACTER_LIMIT),
         ],
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(left: context.mediumValueW, top: context.lowValueH),
@@ -129,9 +128,9 @@ class _CountdownPopupState extends State<CountdownPopup> {
 
   dynamic _openDatePicker(BuildContext context) {
     BottomPicker.date(
-      textStyle: context.textTheme.headline6!,
-      backgroundColor: context.colorScheme.primary,
-      buttonColor: context.colorScheme.secondary,
+      // textStyle: context.textTheme.headline6!,
+      // backgroundColor: context.colorScheme.primary,
+      // buttonColor: context.colorScheme.secondary,
       iconColor: context.colorScheme.primary,
       dismissable: true,
       title: LocaleKeys.countdown_pickerDateTitle.locale,
@@ -160,9 +159,9 @@ class _CountdownPopupState extends State<CountdownPopup> {
 
   dynamic _openTimePicker(BuildContext context) {
     BottomPicker.time(
-            textStyle: context.textTheme.headline6!,
-            backgroundColor: context.colorScheme.primary,
-            buttonColor: context.colorScheme.secondary,
+            // textStyle: context.textTheme.headline6!,
+            // backgroundColor: context.colorScheme.primary,
+            // buttonColor: context.colorScheme.secondary,
             iconColor: context.colorScheme.primary,
             dismissable: true,
             title: LocaleKeys.countdown_pickerTimeTitle.locale,

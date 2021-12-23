@@ -2,7 +2,6 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sizer/sizer.dart';
 
 import '../../../../../core/components/text/auto_locale_text.dart';
 import '../../../../../core/constants/app/app_constants.dart';
@@ -38,19 +37,27 @@ class CounterForms extends StatefulWidget {
 class _CounterFormsState extends State<CounterForms> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: context.dynamicHeight(0.62),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 3,
+          child: Column(
             children: [
-              titleForm,
-              descriptionForm,
+              if (widget.onEdit) const Spacer(),
+              Flexible(flex: 8, child: _titleForm),
+              if (widget.onEdit) const Spacer(),
+              Flexible(flex: 10, child: _descriptionForm),
             ],
           ),
-          countTotalForm,
-          Column(
+        ),
+        Flexible(
+          flex: 2,
+          child: _countTotalForm,
+        ),
+        Flexible(
+          flex: 2,
+          child: Column(
             children: [
               AutoLocaleText(
                 value: LocaleKeys.counter_page_ratio,
@@ -59,13 +66,13 @@ class _CounterFormsState extends State<CounterForms> {
               countRatioForm,
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget get titleForm {
-    return widget.titleController.text == "" && !widget.onEdit
+  Widget get _titleForm {
+    return widget.titleController.text.isEmpty && !widget.onEdit
         ? Container()
         : Padding(
             padding: EdgeInsets.symmetric(
@@ -80,8 +87,7 @@ class _CounterFormsState extends State<CounterForms> {
               enabled: widget.onEdit,
               controller: widget.titleController,
               inputFormatters: [
-                LengthLimitingTextInputFormatter(
-                    AppConstants.TITLE_CARACTER_LIMIT), //Caracter limit for popup
+                LengthLimitingTextInputFormatter(AppConstants.TITLE_CARACTER_LIMIT),
               ],
               decoration: InputDecoration(
                 labelText: LocaleKeys.counter_formTitle.locale,
@@ -91,8 +97,8 @@ class _CounterFormsState extends State<CounterForms> {
           );
   }
 
-  Widget get descriptionForm {
-    return widget.descriptionController.text == "" && !widget.onEdit
+  Widget get _descriptionForm {
+    return widget.descriptionController.text.isEmpty && !widget.onEdit
         ? Container()
         : Padding(
             padding: EdgeInsets.symmetric(horizontal: context.normalValueH),
@@ -112,12 +118,12 @@ class _CounterFormsState extends State<CounterForms> {
           );
   }
 
-  BlocListener get countTotalForm {
+  BlocListener get _countTotalForm {
     return BlocListener<CounterCubit, CounterState>(
       listener: (context, state) {
         if (state is CounterListLoadSuccess) {
           final updated =
-              state.counterList.where((element) => element!.id == widget.model.id!).first!;
+              state.counterList.where((element) => element.id == widget.model.id!).first;
 
           widget.countTotalController.text = context.doubleToString(updated.counterTotal);
           widget.countRatioController.text = context.doubleToString(updated.counterRatio);
@@ -131,29 +137,29 @@ class _CounterFormsState extends State<CounterForms> {
         }
       },
       child: widget.onEdit
-          ? TextField(
-              onChanged: (_) {
-                widget.onValueChange(true);
-              },
-              textAlign: TextAlign.center,
-              style: context.textTheme.headline1!.copyWith(
-                fontSize: (500 / widget.countTotalController.text.length).sp >
-                        context.textTheme.headline1!.fontSize!
-                    ? context.textTheme.headline1!.fontSize
-                    : (500 / widget.countTotalController.text.length).sp,
+          ? Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.mediumValueW,
+                vertical: context.lowValueH,
               ),
-              controller: widget.countTotalController,
-              inputFormatters: <TextInputFormatter>[
-                LengthLimitingTextInputFormatter(
-                  AppConstants.NUMBER_CARACTER_LIMIT,
+              child: TextField(
+                onChanged: (_) {
+                  widget.onValueChange(true);
+                },
+                textAlign: TextAlign.center,
+                style: context.textTheme.headline1,
+                controller: widget.countTotalController,
+                inputFormatters: <TextInputFormatter>[
+                  LengthLimitingTextInputFormatter(
+                    AppConstants.NUMBER_CARACTER_LIMIT,
+                  ),
+                  FilteringTextInputFormatter.allow(RegExp(AppConstants.NUMBER_REGIEX)),
+                ],
+                keyboardType: TextInputType.number,
+                enabled: widget.onEdit,
+                decoration: const InputDecoration(
+                  disabledBorder: InputBorder.none,
                 ),
-                FilteringTextInputFormatter.allow(
-                    RegExp(AppConstants.NUMBER_REGIEX)), //r'[\d+\-\.]'
-              ],
-              keyboardType: TextInputType.number,
-              enabled: widget.onEdit,
-              decoration: const InputDecoration(
-                disabledBorder: InputBorder.none,
               ),
             )
           : FittedBox(
@@ -161,7 +167,7 @@ class _CounterFormsState extends State<CounterForms> {
               child: Padding(
                 padding: context.horizontalPaddingMedium,
                 child: AnimatedFlipCounter(
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: AppConstants.COUNTER_ANIMATION_DURATION),
                   value: widget.model.counterTotal,
                   textStyle: context.textTheme.headline1,
                 ),

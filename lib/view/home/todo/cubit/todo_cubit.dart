@@ -9,16 +9,19 @@ import '../provider/todo_database_provider.dart';
 part 'todo_state.dart';
 
 class TodoCubit extends Cubit<TodoState> {
-  TodoCubit() : super(TodoLoadInProgress());
+  TodoDatabaseProvider provider;
+  TodoCubit(
+    this.provider,
+  ) : super(TodoLoadInProgress());
 
   Future<void> insertTodo(TodoModel model) async {
-    await TodoDatabaseProvider.instance.insertItem(model);
+    await provider.insertItem(model);
     getTodoList();
   }
 
   Future<void> getTodo(int id) async {
     try {
-      final todo = await TodoDatabaseProvider.instance.getItem(id);
+      final todo = await provider.getItem(id);
       emit(TodoLoadSuccess(todo!));
     } on Exception catch (e) {
       emit(TodoLoadFailure(e));
@@ -27,7 +30,7 @@ class TodoCubit extends Cubit<TodoState> {
 
   Future<void> getTodoList() async {
     try {
-      final todoListItemList = await TodoDatabaseProvider.instance.getList();
+      final todoListItemList = await provider.getList();
       emit(TodoListLoadSuccess(todoListItemList));
     } on Exception catch (e) {
       emit(TodoLoadFailure(e));
@@ -39,12 +42,12 @@ class TodoCubit extends Cubit<TodoState> {
       final todolistItemList = (state as TodoListLoadSuccess).todoList;
 
       final updatedTodoListItems = todolistItemList.map((todoListItem) {
-        return todoListItem!.id == model.id ? model : todoListItem;
+        return todoListItem.id == model.id ? model : todoListItem;
       }).toList();
 
       emit(TodoListLoadSuccess(updatedTodoListItems));
     }
-    await TodoDatabaseProvider.instance.updateItem(id, model); //?Stady
+    await provider.updateItem(id, model);
   }
 
   Future<void> checkDoneAllTodos() async {
@@ -52,17 +55,16 @@ class TodoCubit extends Cubit<TodoState> {
       final todolistItemList = (state as TodoListLoadSuccess).todoList;
 
       final todoUnDoneList =
-          todolistItemList.where((todoListItem) => todoListItem!.isDone == 0).toList();
+          todolistItemList.where((todoListItem) => todoListItem.isDone == 0).toList();
 
       final updatedTodoListItems = todolistItemList.map((todoListItem) {
-        return todoListItem!..isDone = 1;
+        return todoListItem..isDone = 1;
       }).toList();
 
       emit(TodoListLoadSuccess(updatedTodoListItems));
 
       for (var i = 0; i < todoUnDoneList.length; i++) {
-        await TodoDatabaseProvider.instance
-            .updateItem(todoUnDoneList[i]!.id!, todoUnDoneList[i]!); //?Stady
+        await provider.updateItem(todoUnDoneList[i].id!, todoUnDoneList[i]);
       }
     }
   }
@@ -71,11 +73,11 @@ class TodoCubit extends Cubit<TodoState> {
     if (state is TodoListLoadSuccess) {
       final updatedTodoListItems = (state as TodoListLoadSuccess)
           .todoList
-          .where((todoListItem) => todoListItem!.id != id)
+          .where((todoListItem) => todoListItem.id != id)
           .toList();
 
       emit(TodoListLoadSuccess(updatedTodoListItems));
-      await TodoDatabaseProvider.instance.removeItem(id); //?is Stady
+      await provider.removeItem(id);
     }
   }
 
@@ -83,18 +85,18 @@ class TodoCubit extends Cubit<TodoState> {
     if (state is TodoListLoadSuccess) {
       final updatedTodoList = (state as TodoListLoadSuccess)
           .todoList
-          .where((todoListItem) => todoListItem!.isDone == 0)
+          .where((todoListItem) => todoListItem.isDone == 0)
           .toList();
 
       final removedTodoList = (state as TodoListLoadSuccess)
           .todoList
-          .where((todoListItem) => todoListItem!.isDone == 1)
+          .where((todoListItem) => todoListItem.isDone == 1)
           .toList();
 
       emit(TodoListLoadSuccess(updatedTodoList));
 
       for (var i = 0; i < removedTodoList.length; i++) {
-        await TodoDatabaseProvider.instance.removeItem(removedTodoList[i]!.id!);
+        await provider.removeItem(removedTodoList[i].id!);
       }
     }
   }
