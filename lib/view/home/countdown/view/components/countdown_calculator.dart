@@ -58,34 +58,34 @@ class CountdownCalculator {
 
       if (startDate.day > endDate.day) {
         months--;
-        days = _daysInMonth(startDate.year + years,
+        days += _daysInMonth(startDate.year + years,
                 ((startDate.month + months - 1) % DateTime.monthsPerYear) + 1) +
             endDate.day -
             startDate.day;
       } else {
-        days = endDate.day - startDate.day;
+        days += endDate.day - startDate.day;
       }
     } else if (endDate.month == startDate.month) {
       if (startDate.day > endDate.day) {
         years--;
         months = DateTime.monthsPerYear - 1;
-        days = _daysInMonth(startDate.year + years,
+        days += _daysInMonth(startDate.year + years,
                 ((startDate.month + months - 1) % DateTime.monthsPerYear) + 1) +
             endDate.day -
             startDate.day;
       } else {
-        days = endDate.day - startDate.day;
+        days += endDate.day - startDate.day;
       }
     } else {
       months = endDate.month - startDate.month;
 
       if (startDate.day > endDate.day) {
         months--;
-        days = _daysInMonth(startDate.year + years, startDate.month + months) +
+        days += _daysInMonth(startDate.year + years, startDate.month + months) +
             endDate.day -
             startDate.day;
       } else {
-        days = endDate.day - startDate.day;
+        days += endDate.day - startDate.day;
       }
     }
 

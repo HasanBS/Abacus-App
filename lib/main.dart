@@ -58,6 +58,7 @@ Future<void> main() async {
         ],
         child: EasyLocalization(
             supportedLocales: LanguageManager.instance.supportedLocales,
+            fallbackLocale: LanguageManager.instance.enLocale,
             path: AppConstants.LANG_PATH,
             child: MyApp())));
   });
